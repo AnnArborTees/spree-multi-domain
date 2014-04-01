@@ -1,6 +1,6 @@
-<p>
-  <%= f.label :stores, Spree.t(:stores)%><br />
-  <% Spree::Store.all.each do |store| %>
-    <%= check_box_tag "product[store_ids][]", store.id, @product.stores.include?(store) %> <%= store.name %>
-  <% end %>
-</p>
+<div class='row'>
+	<div class="alpha four columns">
+		<%= f.label :stores, Spree.t(:stores)%><br />
+		<%= f.collection_select :store_ids, Spree::Store.all, :id, :name, {}, {:multiple => true, class: 'select2 fullwidth'} %>
+	</div>
+</div>
