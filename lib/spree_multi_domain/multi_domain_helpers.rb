@@ -12,8 +12,9 @@ module SpreeMultiDomain
     def current_store
       if session[:store]
         @current_store = Spree::Store.all.reject { |s| s.code != session[:store] }.first
+      else
+        @current_store = Spree::Store.current(request.env['SERVER_NAME'])
       end
-      @current_store ||= Spree::Store.current(request.env['SERVER_NAME'])
     end
 
     def current_tracker

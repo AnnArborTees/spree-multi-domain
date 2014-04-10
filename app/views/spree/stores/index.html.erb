@@ -1,7 +1,7 @@
 <ul>
 	<% @stores.each do |store| %>
 		<li>
-		<h2><%= store.name %></h2>
+		<%= link_to store.name, store.path %>
 	  <%= image_tag store.logo.url %>
 	  </li>
 	<% end %>
