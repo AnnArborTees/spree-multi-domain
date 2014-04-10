@@ -1,0 +1,8 @@
+<ul>
+	<% @stores.each do |store| %>
+		<li>
+		<h2><%= store.name %></h2>
+	  <%= image_tag store.logo.url %>
+	  </li>
+	<% end %>
+</ul>
