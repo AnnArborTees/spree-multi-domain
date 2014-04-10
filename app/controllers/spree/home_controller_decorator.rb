@@ -1,7 +1,7 @@
 module Spree
 	HomeController.class_eval do
 		def index
-			session[:store] = Spree::Store.default.first.code
+			session[:store] = current_store_for_domain.code
 
 			params[:current_store_id] = current_store.id
 			@searcher = build_searcher(params)

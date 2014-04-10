@@ -30,6 +30,10 @@ module Spree
       "/stores/#{code}"
     end
 
+    def self.with_code(code)
+      all.reject { |s| s.code != code }.first
+    end
+
     def self.current(domain = nil)
       current_store = domain ? Store.by_domain(domain).first : nil
       current_store || first_found_default

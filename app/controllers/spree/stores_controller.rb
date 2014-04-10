@@ -6,9 +6,9 @@ class Spree::StoresController < Spree::StoreController
   end
 
   def show
-    session[:store] = Spree::Store.all.reject { |s| s.code != params[:id] }.first.code
+    session[:store] = Spree::Store.with_code(params[:id]).code
 
-    if current_store.default
+    if current_store.id == current_store_for_domain.id
       redirect_to spree.root_path
     else
       params[:current_store_id] = current_store.id
