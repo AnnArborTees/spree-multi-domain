@@ -10,6 +10,9 @@ module SpreeMultiDomain
     end
 
     def current_store
+      if session[:store]
+        @current_store = Spree::Store.all.reject { |s| s.code != session[:store] }.first
+      end
       @current_store ||= Spree::Store.current(request.env['SERVER_NAME'])
     end
 

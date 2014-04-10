@@ -12,7 +12,11 @@ class Spree::StoresController < Spree::StoreController
     @products = @searcher.retrieve_products
     @taxonomies = Spree::Taxonomy.includes(root: :children)
 
-    render 'spree/home/index'
+    if current_store.default
+      redirect_to spree.root_path
+    else
+      render 'spree/home/index'
+    end
   end
 
 end
