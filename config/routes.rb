@@ -3,5 +3,5 @@ Spree::Core::Engine.routes.append do
     resources :stores
   end
   get 'stores', to: 'stores#index'
-  get 'stores/:id', to: 'stores#show'
+  get 'stores/*store_codes', to: 'stores#show'
 end

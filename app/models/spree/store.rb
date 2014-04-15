@@ -12,9 +12,6 @@ module Spree
 
     has_and_belongs_to_many :promotion_rules, :class_name => 'Spree::Promotion::Rules::Store', :join_table => 'spree_promotion_rules_stores', :association_foreign_key => 'promotion_rule_id'
 
-    belongs_to :parent, class_name: 'Spree::Store', foreign_key: 'parent_id'
-    has_many :children, class_name: 'Spree::Store', foreign_key: 'parent_id'
-
     validates_presence_of :name, :code, :domains
     
     before_create :ensure_default_exists_and_is_unique
@@ -31,16 +28,6 @@ module Spree
 
     def path
       "/stores/#{code}"
-    end
-
-    def children
-      Store.where('parent_id = ?', "#{id}")
-    end
-
-    def parent
-      result = Store.where('id = ?', "#{parent_id}")
-      return result unless result.empty?
-      return nil
     end
 
     def self.with_code(code)

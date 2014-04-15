@@ -9,6 +9,10 @@ module SpreeMultiDomain
       receiver.send :helper_method, :current_tracker
     end
 
+    def current_stores
+      # todo THIS
+    end
+
     def current_store
       if session[:store]
         @current_store = Spree::Store.with_code session[:store]
