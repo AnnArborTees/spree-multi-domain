@@ -15,14 +15,16 @@ class Spree::StoresController < Spree::StoreController
       if current_store.matches_domain? && current_store[0].id == current_store[1].id
         redirect_to current_store[1..-1].full_path(spree.root_path)
       else
-        redirect_to '404'
+        raise ActiveRecord::RecordNotFound
       end
-    else
+    elsif current_store.ordered_properly?
       add_current_store_ids_to_params
       @searcher = build_searcher(params)
       @products = @searcher.retrieve_products
       @taxonomies = Spree::Taxonomy.includes(root: :children)
-      render 'spree/home/index'  
+      render 'spree/home/index'
+    else
+      raise ActiveRecord::RecordNotFound
     end
   end
 

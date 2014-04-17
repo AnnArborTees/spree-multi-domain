@@ -49,6 +49,13 @@
     <% end %>
   </div>
 
+  <div class="four columns">
+    <%= f.field_container :url_index do %>
+      <%= f.label :url_index, "URL Position" %>
+      <%= f.number_field :url_index %>
+    <% end %>
+  </div>
+
   <div class="eight columns">
     <%= image_tag @store.logo %>
     <%= f.field_container :logo do %>

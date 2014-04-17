@@ -24,8 +24,10 @@ module SpreeMultiDomain
       end
     end
 
-    def without_duplicates
-    	@stores.reject { |s| id_is_duplicate? s.id }
+    def without_duplicates(as_mixed_store = true)
+    	new_stores = @stores.reject { |s| id_is_duplicate? s.id }
+    	return MixedStore.new(@current_domain, new_stores) if as_mixed_store
+    	return new_stores
     end
 
     def path
@@ -58,6 +60,20 @@ module SpreeMultiDomain
 				return true if @stores.first.domains.include? domain || @current_domain
 			end
 			return false
+		end
+
+		def ordered_properly?
+			current_index = 0
+			@stores.each do |store|
+				if store.url_index
+					if store.url_index >= current_index
+						current_index = store.url_index
+					else
+						return false
+					end
+				end
+			end
+			true
 		end
 
 		def [](*args)
