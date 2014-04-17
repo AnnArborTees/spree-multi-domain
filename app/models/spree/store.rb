@@ -30,6 +30,7 @@ module Spree
       "/stores/#{code}"
     end
 
+    # TODO remove this
     def self.with_code(code)
       all.reject { |s| s.code != code }.first
     end
