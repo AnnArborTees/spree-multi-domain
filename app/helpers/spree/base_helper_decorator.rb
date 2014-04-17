@@ -1,10 +1,10 @@
 module Spree
   BaseHelper.class_eval do
   	def store_home_path
-	    if current_store.default
+	    if current_store.matches_domain?
 	      spree.root_path
 	    else
-	      "/stores/#{current_store.code}"
+	      "/stores/#{current_store.path}"
 	    end
 	  end
   	

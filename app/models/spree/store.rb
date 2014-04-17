@@ -26,7 +26,7 @@ module Spree
       :path => 'stores/:id/:style/:basename.:extension',
       :convert_options => { :all => '-strip -auto-orient' }
 
-    def path
+    def path(*args)
       "/stores/#{code}"
     end
 
