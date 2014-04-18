@@ -18,6 +18,11 @@ require 'spree/testing_support/authorization_helpers'
 require 'spree_multi_domain/factories'
 
 RSpec.configure do |config|
+  config.include FactoryGirl::Syntax::Methods
+  config.include AjaxHelpers
+  config.include AuthenticationHelpers
+  config.include StoreHelpers
+
   # == Mock Framework
   #
   # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:
