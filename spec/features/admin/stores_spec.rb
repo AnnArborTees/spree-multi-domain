@@ -47,7 +47,7 @@ feature 'With multi-domain stores' do
       click_link 'Configuration'
       click_link 'Stores & Domains'
       expect(page).to have_selector('tbody')
-      expect(page).to have_selector('td', text: 'Test Store')
+      expect(page).to have_content('Test Store')
       find('a[data-action="remove"]').click
 
       page.driver.browser.switch_to.alert.accept
