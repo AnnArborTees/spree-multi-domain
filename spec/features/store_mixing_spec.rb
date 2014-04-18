@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+# TODO clean this up holy cow
+
 feature 'Store mixing:' do
   
   let!(:admin_role) {create(:admin_role)}
@@ -47,7 +49,7 @@ feature 'Store mixing:' do
       expect(page).to_not display_product_called 'Product in Test'
     end
 
-    scenario 'I can view product details, and the home buttons will lead back to the store home', wip: false, pending: true do
+    scenario 'I can view product details, and the home buttons will lead back to the store home', wip: false do
       visit '/stores/other'
       visit '/products/other-product'
       expect(page).to have_content 'Home'

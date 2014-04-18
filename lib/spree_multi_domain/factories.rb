@@ -8,6 +8,7 @@ FactoryGirl.define do
 end
 
 # Begin added stuff
+# TODO clean this uppppp
 FactoryGirl.define do
 	factory :product_in_test, class: Spree::Product do
 		name 'Product in Test'
