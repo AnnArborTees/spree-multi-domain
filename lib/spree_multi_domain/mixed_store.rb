@@ -66,7 +66,7 @@ module SpreeMultiDomain
 			current_index = 0
 			@stores.each do |store|
 				if store.url_index
-					if store.url_index >= current_index
+					if store.url_index > current_index
 						current_index = store.url_index
 					else
 						return false
