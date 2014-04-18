@@ -63,7 +63,7 @@ module SpreeMultiDomain
 		end
 
 		def ordered_properly?
-			current_index = 0
+			current_index = -1
 			@stores.each do |store|
 				if store.url_index
 					if store.url_index > current_index
@@ -116,7 +116,6 @@ module SpreeMultiDomain
 		def parse_arg(arg)
 			if arg.is_a? String
 				if arg.index('/')
-	        # TODO try Spree::Store.where code: arg.split('/')
 					arg.split('/').map { |s| Spree::Store.all.where code: s }
 				else
 					Spree::Store.where code: arg
