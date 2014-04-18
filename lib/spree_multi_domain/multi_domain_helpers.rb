@@ -18,8 +18,12 @@ module SpreeMultiDomain
           @current_store = MixedStore.new(current_domain, by_domain, session[:store])
         end
       else
-        unless by_domain.empty? then @current_store = MixedStore.new(current_domain, by_domain)
-                                else @current_store = MixedStore.new(current_domain, default_store)
+        if not by_domain.empty?
+          @current_store = MixedStore.new(current_domain, by_domain)
+        elsif default_store
+          @current_store = MixedStore.new(current_domain, default_store)
+        else
+          nil
         end
       end
     end

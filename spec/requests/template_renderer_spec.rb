@@ -20,6 +20,6 @@ describe "Template renderer with dynamic layouts" do
     ApplicationController.stub(:current_store).and_return(nil)
 
     get "http://www.example.com"
-    response.body.should eql("Store layout hello")
+    response.body.should eql("Default layout hello")
   end
 end

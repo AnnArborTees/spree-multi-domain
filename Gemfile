@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-branch = 'master'
+branch = '2-2-stable'
 
 gem 'spree_api', github: 'spree/spree', branch: branch
 gem 'spree_backend', github: 'spree/spree', branch: branch

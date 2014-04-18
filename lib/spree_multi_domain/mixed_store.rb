@@ -59,7 +59,7 @@ module SpreeMultiDomain
 			if @stores.first
 				return true if @stores.first.domains.include? domain || @current_domain
 			end
-			return false
+			false
 		end
 
 		def ordered_properly?
@@ -78,6 +78,13 @@ module SpreeMultiDomain
 
 		def [](*args)
 			return MixedStore.new(@current_domain, @stores[*args])
+		end
+
+		def ==(other)
+			@stores.each do |store|
+				return true if store == other
+			end
+			false
 		end
 
 		def contains_any_of?(*args)
