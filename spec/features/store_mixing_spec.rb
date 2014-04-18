@@ -49,7 +49,7 @@ feature 'Store mixing:' do
       expect(page).to_not display_product_called 'Product in Test'
     end
 
-    scenario 'I can view product details, and the home buttons will lead back to the store home', wip: false do
+    scenario 'I can view product details, and the home buttons will lead back to the store home', wip: false, pending: true do
       visit '/stores/other'
       visit '/products/other-product'
       expect(page).to have_content 'Home'
@@ -84,7 +84,7 @@ feature 'Store mixing:' do
 
 
 
-    scenario 'I can visit a valid compound store url and see only the mutually-included products', wip: true do
+    scenario 'I can visit a valid compound store url and see only the mutually-included products', wip: false do
       visit '/stores/other/sub'
       expect(page).to display_product_called 'Other + Sub'
       expect(page).to_not display_product_called 'Product in Sub'
@@ -92,14 +92,14 @@ feature 'Store mixing:' do
       expect(page).to_not display_product_called 'Product in Test'
     end
 
-    scenario 'visiting an invalid compound store url redirects to an error page', wip: true do
+    scenario 'visiting an invalid compound store url redirects to an error page', wip: false do
       visit '/stores/sub/other'
       # TODO Change this to actually look for error page content
       expect(page).to_not display_product_called 'Product in Sub'
       expect(page).to_not display_product_called 'Product in Other'
     end
 
-    scenario 'two stores of the same url index cannot be mixed', wip: true do
+    scenario 'two stores of the same url index cannot be mixed', wip: false do
       visit '/stores/test/other'
       # TODO Change this to actually look for error page content
       expect(page).to_not display_product_called 'Product in Other'
@@ -109,7 +109,7 @@ feature 'Store mixing:' do
     context 'when alternative_store is under the domain www.example.com,' do
       before(:each) { alternative_store.domains = 'www.example.com'; alternative_store.save }
 
-      scenario 'I am redirected to /stores/sub when visiting /stores/other/sub', wip: true do
+      scenario 'I am redirected to /stores/sub when visiting /stores/other/sub', wip: false do
         visit '/stores/other/sub'
         expect(current_path).to eq '/stores/sub'
         expect(page).to_not display_product_called 'Product in Sub'

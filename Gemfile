@@ -7,5 +7,6 @@ gem 'spree_backend', github: 'spree/spree', branch: branch
 gem 'spree_core', github: 'spree/spree', branch: branch
 gem 'spree_frontend', github: 'spree/spree', branch: branch
 gem 'spree_multi_currency', github: 'spree/spree_multi_currency', branch: branch
+gem 'database_cleaner'
 
 gemspec
