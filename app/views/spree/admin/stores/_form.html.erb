@@ -10,7 +10,7 @@
   <div class="four columns">
     <%= f.field_container :code do %>
       <%= f.label :code, Spree.t(:store_code) %><br />
-      <%= f.text_field :code, :class => 'fullwidth' %>
+      <%= f.text_field :code, id: 'code-field', :class => 'fullwidth' %>
       <%= error_message_on :store, :code %>
     <% end %>
   </div>
@@ -52,7 +52,8 @@
   <div class="four columns">
     <%= f.field_container :url_index do %>
       <%= f.label :url_index, "URL Position" %>
-      <%= f.number_field :url_index %>
+      <span id='url-index-ex-space'></span><br />
+      <%= f.number_field :url_index, id: 'url-index-picker', maxlength: '2', size: '2' %>
     <% end %>
   </div>
 
