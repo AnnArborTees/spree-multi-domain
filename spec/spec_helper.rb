@@ -17,6 +17,15 @@ require 'spree/testing_support/authorization_helpers'
 
 require 'spree_multi_domain/factories'
 
+class ActiveRecord::Base
+  mattr_accessor :shared_connection
+  @@shared_connection = nil
+
+  def self.connection
+    @@shared_connection || retrieve_connection
+  end
+end
+
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
   config.include AjaxHelpers
@@ -38,7 +47,7 @@ RSpec.configure do |config|
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
-  config.use_transactional_fixtures = true
+  config.use_transactional_fixtures = false
 
   config.include FactoryGirl::Syntax::Methods
   config.include Spree::TestingSupport::ControllerRequests

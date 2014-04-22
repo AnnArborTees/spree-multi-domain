@@ -49,9 +49,10 @@ feature 'Store mixing:' do
       expect(page).to_not display_product_called 'Product in Test'
     end
 
-    scenario 'I can view product details, and the home buttons will lead back to the store home', wip: false, pending: true do
+    scenario 'I can view product details, and the home buttons will lead back to the store home', wip: true, js: true do
       visit '/stores/other'
-      visit '/products/other-product'
+      find('a', text: "Product in Other").click
+      # visit '/products/other-product'
       expect(page).to have_content 'Home'
       expect(page).to have_selector 'a[href="/stores/other"]'
     end
