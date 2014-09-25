@@ -15,6 +15,10 @@ require 'spree/testing_support/factories'
 require 'spree/testing_support/controller_requests'
 require 'spree/testing_support/authorization_helpers'
 
+require 'spree/api/testing_support/caching'
+require 'spree/api/testing_support/helpers'
+require 'spree/api/testing_support/setup'
+
 require 'spree_multi_domain/factories'
 
 class ActiveRecord::Base
@@ -28,9 +32,13 @@ end
 
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
+  config.include Spree::Api::TestingSupport::Helpers, :type => :controller
+  config.extend Spree::Api::TestingSupport::Setup, :type => :controller
   config.include AjaxHelpers
   config.include AuthenticationHelpers
   config.include StoreHelpers
+
+  #config.include ControllerHacks, type: :controller
 
   # == Mock Framework
   #
@@ -44,6 +52,10 @@ RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
+  config.before do
+    Spree::Api::Config[:requires_authentication] = true
+  end
+
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
@@ -51,4 +63,8 @@ RSpec.configure do |config|
 
   config.include FactoryGirl::Syntax::Methods
   config.include Spree::TestingSupport::ControllerRequests
+
+
+  config.deprecation_stream = 'log/rspec-deprecations.log'
+
 end
