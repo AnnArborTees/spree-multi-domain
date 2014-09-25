@@ -6,7 +6,7 @@ Spree::Core::Engine.routes.append do
   get 'stores/*store_codes', to: 'stores#show'
 
   namespace :api, :defaults => { :format => 'json' } do
-    resources :stores
+    resources :stores, only: [:index, :show]
   end
 
 end
