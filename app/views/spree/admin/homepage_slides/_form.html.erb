@@ -1,0 +1,58 @@
+<div data-hook="admin_store_form_fields">
+
+  <div class="omega twelve columns">
+    <%= image_tag @homepage_slide.image(:thumb) unless @homepage_slide.image.blank? %>
+    <%= f.field_container :image do %>
+        <%= f.label :image, Spree.t(:homepage_slide_image) %><br />
+        <%= f.file_field :image %>
+        <%= error_message_on :homepage_slide, :image %>
+    <% end %>
+  </div>
+
+  <div class="alpha five columns">
+    <%= f.field_container :name do %>
+        <%= f.label :name, Spree.t(:homepage_slide_name) %><br />
+        <%= f.text_field :name, :class => 'fullwidth' %>
+        <%= error_message_on :homepage_slide, :name %>
+    <% end %>
+
+    <%= f.field_container :homepage_slide_description do %>
+        <%= f.label :description, Spree.t(:homepage_slide_description) %><br />
+        <%= f.text_area :description, :cols => 60, :rows => 4, :class => 'fullwidth' %>
+        <%= error_message_on :homepage_slide, :description %>
+    <% end %>
+  </div>
+
+  <div class="five columns">
+    <%= f.field_container :homepage_slide_label do %>
+        <%= f.label :label, Spree.t(:homepage_slide_label) %><br />
+        <%= f.text_field :label, :class => 'fullwidth' %>
+        <%= error_message_on :homepage_slide, :label %>
+    <% end %>
+
+    <%= f.field_container :homepage_slide_text do %>
+        <%= f.label :text, Spree.t(:homepage_slide_text) %><br />
+        <%= f.text_area :text, :cols => 60, :rows => 4, :class => 'fullwidth' %>
+        <%= error_message_on :homepage_slide, :text %>
+    <% end %>
+  </div>
+
+  <div class="two columns">
+    <%= f.field_container :active do %>
+        <%= f.label :active, Spree.t(:homepage_slide_active) %>
+        <ul>
+          <li><%= f.radio_button :active, '1' %> <%= Spree.t(:yes) %></li>
+          <li><%= f.radio_button :active, '0' %> <%= Spree.t(:no) %></li>
+        </ul>
+        <%= error_message_on :homepage_slide, :active %>
+    <% end %>
+  </div>
+
+    <div class='row'>
+      <div class="alpha twelve columns">
+        <%= f.label :stores, Spree.t(:stores)%><br />
+        <%= f.collection_select :store_ids, Spree::Store.all, :id, :name, {}, {:multiple => true, class: 'select2 fullwidth'} %>
+      </div>
+    </div>
+
+</div>

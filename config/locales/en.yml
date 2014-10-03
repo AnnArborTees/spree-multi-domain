@@ -22,3 +22,17 @@ en:
         description: "Store must match one from the list"
     store_rule:
       choose_stores: "Choose Stores"
+
+    homepage_slides_admin: "Homepage Slides"
+    homepage_slides: "Homepage Slides"
+    new_homepage_slide: "New Homepage Slide"
+    homepage_slide_name: "Name"
+    homepage_slide_description: "Description"
+    homepage_slide_stores: "Stores"
+    homepage_slide_image: "Image"
+    homepage_slide_label: "Label"
+    homepage_slide_text: "Text"
+    homepage_slide_active: "Active?"
+    back_to_homepage_slides_list: "Back to Homepage Slides List"
+    editing_homepage_slide: 'Editing Homepage Slide'
+

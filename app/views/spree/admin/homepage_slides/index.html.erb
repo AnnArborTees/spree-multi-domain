@@ -1,0 +1,45 @@
+<%= render :partial => 'spree/admin/shared/configuration_menu' %>
+
+<% content_for :page_title do %>
+    <%= Spree.t(:homepage_slides) %>
+<% end %>
+
+<% content_for :page_actions do %>
+    <li>
+      <%= button_link_to Spree.t(:new_homepage_slide), new_object_url,  :icon => 'icon-plus', :id => 'admin_new_homepage_slide_link' %>
+    </li>
+<% end %>
+
+<table class="index" id='listing_homepage_slides'>
+  <colgroup>
+    <col style="width: 120px">
+    <col style="width: 80px">
+    <col style="width: 80px">
+    <col style="width: 220px">
+    <col style="width: 15%">
+  </colgroup>
+  <thead>
+  <th><%= Spree.t(:homepage_slide_name) %></th>
+  <th><%= Spree.t(:homepage_slide_description) %></th>
+  <th><%= Spree.t(:homepage_slide_image) %></th>
+  <th><%= Spree.t(:homepage_slide_stores) %></th>
+  <th><%= Spree.t(:homepage_slide_active) %></th>
+  <th data-hook="admin_homepage_slides_index_header_actions" class="actions"></th>
+  </thead>
+  <tbody>
+  <% @homepage_slides.each do |homepage_slide|%>
+      <tr id="<%= spree_dom_id homepage_slide %>"
+          data-hook="admin_homepage_slides_index_rows" class="<%= cycle('odd', 'even') %>">
+        <td><%= homepage_slide.name %></td>
+        <td><%= homepage_slide.description %></td>
+        <td><%= image_tag homepage_slide.image(:thumb) %></td>
+        <td><%= homepage_slide.stores.map(&:code).join(", ") unless homepage_slide.stores.empty? %></td>
+        <td><%= true_false_yes_no homepage_slide.active %></td>
+        <td data-hook="admin_homepage_slides_index_row_actions" class="actions">
+          <%= link_to_edit homepage_slide, :no_text => true %> &nbsp;
+          <%= link_to_delete homepage_slide, :no_text => true %>
+        </td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>

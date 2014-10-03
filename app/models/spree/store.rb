@@ -1,6 +1,7 @@
 module Spree
   class Store < ActiveRecord::Base
     has_and_belongs_to_many :products, :join_table => 'spree_products_stores'
+    has_and_belongs_to_many :homepage_slides,  -> { where(active: 1) }, :join_table => 'spree_stores_homepage_slides'
     has_many :taxonomies
     has_many :orders
 
@@ -13,7 +14,7 @@ module Spree
     has_and_belongs_to_many :promotion_rules, :class_name => 'Spree::Promotion::Rules::Store', :join_table => 'spree_promotion_rules_stores', :association_foreign_key => 'promotion_rule_id'
 
     validates_presence_of :name, :code, :domains
-    
+
     before_create :ensure_default_exists_and_is_unique
 
     scope :default, lambda { where(:default => true) }
