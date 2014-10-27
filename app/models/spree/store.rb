@@ -15,7 +15,7 @@ module Spree
 
     validates_presence_of :name, :code, :domains
 
-    before_create :ensure_default_exists_and_is_unique
+    before_save :ensure_default_exists_and_is_unique
 
     scope :default, lambda { where(:default => true) }
     scope :by_domain, lambda { |domain| where("domains like ?", "%#{domain}%") }
