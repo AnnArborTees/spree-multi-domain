@@ -41,6 +41,13 @@
     <% end %>
   </div>
 
+  <div class="two columns">
+    <%= f.field_container :homepage_layout do %>
+        <%= f.label :homepage_layout, Spree.t(:homepage_layout) %>
+        <%= f.select :homepage_layout, Spree::Store.homepage_layouts %>
+    <% end %>
+  </div>
+
   <div class="six columns">
     <%= f.field_container :domains do %>
       <%= f.label :domains, Spree.t(:domains) %><br />

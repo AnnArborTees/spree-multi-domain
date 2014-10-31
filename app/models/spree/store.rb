@@ -1,5 +1,6 @@
 module Spree
   class Store < ActiveRecord::Base
+
     has_and_belongs_to_many :products, :join_table => 'spree_products_stores'
     has_and_belongs_to_many :homepage_slides,  -> { where(active: 1) }, :join_table => 'spree_stores_homepage_slides'
     has_many :taxonomies
@@ -51,6 +52,10 @@ module Spree
       elsif Store.default.empty?
         self.default = true
       end
+    end
+
+    def self.homepage_layouts
+      %w(default)
     end
   end
 end
