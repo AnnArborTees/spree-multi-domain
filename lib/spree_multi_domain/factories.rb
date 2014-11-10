@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :store, :class => Spree::Store do
     name 'My store'
     code 'my_store'
+    email 'example@example.com'
     domains 'www.example.com' # makes life simple, this is the default
     # integration session domain
   end
@@ -45,7 +46,7 @@ FactoryGirl.define do
 end
 
 FactoryGirl.define do
-  factory :default_store, class: Spree::Store do 
+  factory :default_store, class: Spree::Store do
     name 'Test Store'
     code 'test'
     domains 'test.aatc.com'

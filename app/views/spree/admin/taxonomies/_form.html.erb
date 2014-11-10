@@ -7,6 +7,6 @@
 </div>
 
 <p>
-  <%= f.label :name, Spree.t(:store) %> <span class="required">*</span><br />
-  <%= collection_select :taxonomy, :store_id, Spree::Store.all, :id, :name  %>
+  <%= f.label :name, Spree.t(:stores) %> <span class="required">*</span><br />
+  <%= f.collection_select :store_ids, Spree::Store.all, :id, :name, {}, {:multiple => true, class: 'select2 fullwidth'} %>
 </p>

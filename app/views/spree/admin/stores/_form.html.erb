@@ -65,6 +65,15 @@
   </div>
 
   <div class="eight columns">
+    <%= f.field_container :taxonomies do %>
+        <%= f.label :taxonomies, Spree.t(:taxonomies) %><br />
+        <%= f.collection_select :taxonomy_ids, Spree::Taxonomy.all, :id, :name, {}, {:multiple => true, class: 'select2 fullwidth'} %>
+        <%= error_message_on :store, :taxonomies %>
+    <% end %>
+  </div>
+
+
+  <div class="eight columns">
     <%= image_tag @store.logo %>
     <%= f.field_container :logo do %>
       <%= f.label :logo, Spree.t(:logo) %><br />
