@@ -22,6 +22,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'spree_backend', version
   s.add_dependency 'spree_frontend', version
   s.add_dependency 'spree_api', version
+  s.add_dependency 'sunspot_rails'
+  s.add_dependency 'sunspot_solr'
+  s.add_dependency 'spree_solr', version
 
   s.add_development_dependency 'capybara', '~> 1.1.4'
   s.add_development_dependency 'coffee-rails'
