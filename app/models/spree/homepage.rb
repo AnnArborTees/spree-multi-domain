@@ -5,6 +5,7 @@ module Spree
 
     has_many :homepage_products, foreign_key: 'homepage_id'
     has_many :products, through: :homepage_products, foreign_key: 'product_id'
+    belongs_to :store
 
   end
 end
