@@ -1,0 +1,31 @@
+<%= render :partial => 'spree/admin/shared/configuration_menu' %>
+
+<% content_for :page_title do %>
+    <%= Spree.t(:new_homepage) %>
+<% end %>
+
+<%= render :partial => 'spree/admin/shared/store_sub_menu' %>
+
+<% content_for :page_actions do %>
+    <li>
+      <%= button_link_to Spree.t(:back_to_homepages_list), spree.admin_homepages_path, :icon => 'icon-arrow-left' %>
+    </li>
+<% end %>
+
+<div data-hook="admin_homepage_new_form_header">
+  <%= render :partial => 'spree/shared/error_messages', :locals => { :target => @homepage } %>
+</div>
+
+<div data-hook="admin_homepage_new_form">
+  <%= form_for [:admin, @homepage], :html => {:multipart => true}  do |f| %>
+      <fieldset class="no-border-top">
+        <%= render :partial => 'form', :locals => { :f => f } %>
+
+        <div class="clear"></div>
+
+        <div data-hook="admin_homepage_new_form_buttons">
+          <%= render :partial => 'spree/admin/shared/new_resource_links' %>
+        </div>
+      </fieldset>
+  <% end %>
+</div>

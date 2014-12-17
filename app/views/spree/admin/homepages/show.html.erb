@@ -1,0 +1,15 @@
+<%= render :partial => 'spree/admin/shared/configuration_menu' %>
+
+<% content_for :page_title do %>
+    <%= Spree.t(:showing_homepage) %>
+<% end %>
+
+<%= render :partial => 'spree/admin/shared/store_sub_menu' %>
+
+
+<div class="info" id='sorting_explanation'>
+  <%= Spree.t(:click_and_drag_on_the_products_to_sort_them).html_safe %>
+</div>
+
+
+<ul id='homepage_products'></ul>

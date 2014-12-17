@@ -1,0 +1,23 @@
+<div data-hook="admin_store_form_fields">
+
+  <div class="alpha omega five columns">
+    <%= f.field_container :name do %>
+        <%= f.label :name, Spree.t(:homepage_name) %><br />
+        <%= f.text_field :name, :class => 'fullwidth' %>
+        <%= error_message_on :homepage, :name %>
+    <% end %>
+
+    <%= f.field_container :store do %>
+        <%= f.label :store, Spree.t(:store)%><br />
+        <%= f.collection_select :store_id, Spree::Store.all, :id, :name, {include_blank: true}, { :multiple => false, class: 'select2 fullwidth'} %>
+    <% end %>
+  </div>
+
+  <div class='row'>
+    <div class="alpha twelve columns">
+      <%= f.label :products, Spree.t(:products) %><br />
+      <%= f.hidden_field :product_ids, value: @homepage.products.map{|x| "#{x.id}||#{x.name}"}.join('|||'),
+                         class: 'select2-ajax', width: '100%' %>
+    </div>
+  </div>
+</div>

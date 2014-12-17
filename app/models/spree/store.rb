@@ -6,6 +6,8 @@ module Spree
     has_and_belongs_to_many :taxonomies, :join_table => 'spree_taxonomies_stores'
     has_many :orders
 
+    has_one :homepage
+
     has_many :store_payment_methods
     has_many :payment_methods, :through => :store_payment_methods
 

@@ -4,6 +4,8 @@
     <%= Spree.t(:homepage_slides) %>
 <% end %>
 
+<%= render :partial => 'spree/admin/shared/store_sub_menu' %>
+
 <% content_for :page_actions do %>
     <li>
       <%= button_link_to Spree.t(:new_homepage_slide), new_object_url,  :icon => 'icon-plus', :id => 'admin_new_homepage_slide_link' %>

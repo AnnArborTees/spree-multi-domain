@@ -1,0 +1,50 @@
+//= require select2
+
+jQuery( function($){
+    $('.select2-ajax').select2({
+        placeholder: "Search for a product",
+        minimumInputLength: 4,
+        multiple: true,
+        width: '100%',
+        ajax: {
+            url: '/api/products.json',
+                    dataType: 'json',
+            data: function(term, page) {
+
+                return {
+                    'q[name_cont]': term,
+                    page: 1
+                };
+            },
+            results: function(data, page) {
+                return {
+                    results: data.products
+                };
+            },
+            quietMillis: 250
+        },
+        formatResult: formatResult,
+        formatSelection: formatSelection,
+        initSelection: function(element, callback) {
+            var data = [];
+            $(element.val().split("|||")).each(function(i) {
+                var item = this.split('||');
+                data.push({
+                    id: item[0],
+                    name: item[1]
+                });
+            });
+            $(element).val('');
+            callback(data);
+        }
+    });
+
+    function formatResult(product) {
+        return '<div>' + product.name + '</div>';
+    };
+
+    function formatSelection(data) {
+        return data.name;
+    };
+
+})
