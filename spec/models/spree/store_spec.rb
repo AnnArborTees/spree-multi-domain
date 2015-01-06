@@ -3,8 +3,8 @@ require 'spec_helper'
 describe Spree::Store do
 
   describe "by_domain" do 
-    let!(:store)    { FactoryGirl.create(:store, :domains => "website1.com\nwww.subdomain.com") }
-    let!(:store_2)  { FactoryGirl.create(:store, :domains => 'freethewhales.com') }
+    let!(:store)    { FactoryGirl.create(:store, slug: 'store-1', domains: "website1.com\nwww.subdomain.com") }
+    let!(:store_2)  { FactoryGirl.create(:store, slug: 'store-2', domains: 'freethewhales.com') }
 
     it "should find stores by domain" do
       by_domain = Spree::Store.by_domain('www.subdomain.com')
@@ -15,8 +15,8 @@ describe Spree::Store do
   end
 
   describe "default" do
-    let!(:store)    { FactoryGirl.create(:store) }
-    let!(:store_2)  { FactoryGirl.create(:store, default: true) }
+    let!(:store)    { FactoryGirl.create(:store, slug: 'store-1') }
+    let!(:store_2)  { FactoryGirl.create(:store, slug: 'store-2', default: true) }
 
     it "should ensure there is a default if one doesn't exist yet" do
       store.default.should be_true

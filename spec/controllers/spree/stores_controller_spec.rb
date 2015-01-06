@@ -3,11 +3,20 @@ require 'spec_helper'
 describe Spree::StoresController do
   
   describe 'on :show to a valid store' do
-    let!(:store) { FactoryGirl.create(:store) }
+    let!(:store) { FactoryGirl.create(:store, seo_title: 'totally rad') }
 
     it 'should return 200' do
-      spree_get :show, store_codes: store.code
+      spree_get :show, store_codes: store.slug
       expect(response.response_code).to eq 200
+    end
+
+    describe 'title', story_334: true do
+      context 'when current_store has an seo_title' do
+        it 'is current_store.seo_title' do
+          spree_get :show, store_codes: store.slug
+          expect(controller.send(:title)).to include 'totally rad'
+        end
+      end
     end
   end
 

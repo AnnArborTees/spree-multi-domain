@@ -1,4 +1,3 @@
 --color
---format
+--format d
 progress
---backtrace

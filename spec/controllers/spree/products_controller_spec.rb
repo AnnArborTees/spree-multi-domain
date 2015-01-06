@@ -4,6 +4,10 @@ describe Spree::ProductsController do
 
   let!(:product) { FactoryGirl.create(:product) }
 
+  context 'title', story_334: true do
+    it { is_expected.to be_a Spree::TitleFromCurrentStore }
+  end
+
   describe 'on :show to a product without any stores' do
     let!(:store) { FactoryGirl.create(:store) }
 
@@ -17,7 +21,7 @@ describe Spree::ProductsController do
   # Regression test for #75
   describe 'on :show to a product in the wrong store' do
     let!(:store_1) { FactoryGirl.create(:store) }
-    let!(:store_2) { FactoryGirl.create(:store) }
+    let!(:store_2) { FactoryGirl.create(:store, slug: 'second') }
 
     before(:each) do
       product.stores << store_1

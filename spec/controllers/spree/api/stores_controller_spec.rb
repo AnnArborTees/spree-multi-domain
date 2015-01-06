@@ -8,7 +8,7 @@ module Spree
 
     context 'as a normal user' do
 
-      let!(:store) { create(:store) }
+      let!(:store) { create(:store, slug: 'theslug') }
 
       describe '#index' do
         it 'retrieves a list of stores'  do

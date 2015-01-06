@@ -46,3 +46,15 @@ Spree::Search::Solr.class_eval do
     end
   end
 end
+
+Sunspot::Search::PaginatedCollection.class_eval do
+  unless instance_methods.include?(:maximum)
+    def maximum(column)
+      max = nil
+      each do |entry|
+        max = entry if max.nil? || entry > max
+      end
+      max
+    end
+  end
+end

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Spree::Tracker do
   before(:each) do
-    store = FactoryGirl.create(:store)
+    store = FactoryGirl.create(:store, slug: 'whatever')
     @tracker = FactoryGirl.create(:tracker, :store => store)
 
     another_store = FactoryGirl.create(:store, :domains => 'completely-different-store.com')

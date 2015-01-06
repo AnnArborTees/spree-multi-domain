@@ -1,4 +1,5 @@
 Spree::ProductsController.class_eval do
+  include Spree::TitleFromCurrentStore
 
   before_filter :can_show_product, :only => :show
 

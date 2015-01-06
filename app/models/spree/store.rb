@@ -16,9 +16,11 @@ module Spree
 
     has_and_belongs_to_many :promotion_rules, :class_name => 'Spree::Promotion::Rules::Store', :join_table => 'spree_promotion_rules_stores', :association_foreign_key => 'promotion_rule_id'
 
-    validates_presence_of :name, :code, :domains, :email
+    validates :name, :code, :slug, :domains, :email, presence: true
+    validates :slug, uniqueness: true, unless: proc { slug.nil? || slug.empty? }
 
     before_save :ensure_default_exists_and_is_unique
+    before_validation proc { self.slug = code if slug.nil? }
 
     scope :default, lambda { where(:default => true) }
     scope :by_domain, lambda { |domain| where("domains like ?", "%#{domain}%") }
@@ -31,7 +33,7 @@ module Spree
       :convert_options => { :all => '-strip -auto-orient' }
 
     def path(*args)
-      "/stores/#{code}"
+      "/stores/#{slug}"
     end
 
     # TODO remove this
@@ -54,6 +56,10 @@ module Spree
       elsif Store.default.empty?
         self.default = true
       end
+    end
+
+    def assign_slug_to_code_if_slug_is_nil
+      self.slug = code if slug.nil?
     end
 
     def self.homepage_layouts

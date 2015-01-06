@@ -20,6 +20,7 @@ require 'spree/api/testing_support/helpers'
 require 'spree/api/testing_support/setup'
 
 require 'spree_multi_domain/factories'
+require 'sunspot_matchers'
 
 class ActiveRecord::Base
   mattr_accessor :shared_connection
@@ -37,6 +38,7 @@ RSpec.configure do |config|
   config.include AjaxHelpers
   config.include AuthenticationHelpers
   config.include StoreHelpers
+  config.include SunspotMatchers
 
   #config.include ControllerHacks, type: :controller
 
@@ -54,6 +56,7 @@ RSpec.configure do |config|
 
   config.before do
     Spree::Api::Config[:requires_authentication] = true
+    Sunspot.session = SunspotMatchers::SunspotSessionSpy.new(Sunspot.session)
   end
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your

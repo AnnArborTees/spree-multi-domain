@@ -8,7 +8,7 @@ feature 'Store mixing:' do
   let!(:user) {create(:user)}
 
   let!(:shipping_category) {create(:shipping_category)}
-  let!(:default_store) {create(:default_store)}
+  let!(:default_store) {create(:default_store, slug: 'le-default')}
 
   let!(:product_in_test)  {
     create(:product_in_test,  
@@ -18,8 +18,8 @@ feature 'Store mixing:' do
 
   context 'as a user visiting the site', user: true do
   
-    let!(:alternative_store) {create(:alternative_store)}
-    let!(:sub_store) {create(:sub_store)}
+    let!(:alternative_store) {create(:alternative_store, slug: 'alt')}
+    let!(:sub_store) {create(:sub_store, slug: 'sub-store')}
 
     let!(:product_in_other) {
       create(:product_in_other,

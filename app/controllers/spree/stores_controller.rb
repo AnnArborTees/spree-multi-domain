@@ -1,4 +1,5 @@
 class Spree::StoresController < Spree::StoreController
+  include Spree::TitleFromCurrentStore
   helper 'spree/products'
 
   def index
