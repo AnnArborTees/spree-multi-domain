@@ -61,11 +61,11 @@ module Spree
     end
 
     def all_children
-      all = children
-      last_size = 0
-      until all.size == last_size
-        last_size = all.size
-        all.map!(&:children).flatten!
+      all = []
+      children = self.children.to_a
+      children.each do |child|
+        all << child
+        all += child.all_children
       end
       all
     end
