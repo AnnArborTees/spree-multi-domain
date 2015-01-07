@@ -5,12 +5,12 @@ feature 'Parent stores', story_319: true do
   let!(:fandom) { create :store, parent: shop, slug: 'fandom', domains: 'fan.test.com' }
   let!(:starkid) { create :store, parent: fandom, slug: 'starkid', domains: 'starkid.test.com' }
 
-  let!(:a1) { create :product, name: 'A1', stores: [shop] }
-  let!(:a2) { create :product, name: 'A2', stores: [fandom] }
-  let!(:a3) { create :product, name: 'A3', stores: [starkid] }
+  let!(:a1) { create :product, slug: 'a1-prod', name: 'A1', stores: [shop] }
+  let!(:a2) { create :product, slug: 'a2-prod', name: 'A2', stores: [fandom] }
+  let!(:a3) { create :product, slug: 'a3-prod', name: 'A3', stores: [starkid] }
 
-  let!(:b1) { create :product, name: 'B1', stores: [shop] }
-  let!(:b3) { create :product, name: 'B3', stores: [starkid] }
+  let!(:b1) { create :product, slug: 'b1-prod', name: 'B1', stores: [shop] }
+  let!(:b3) { create :product, slug: 'b3-prod', name: 'B3', stores: [starkid] }
 
   context 'http://shop.test.com' do
     before :each do
