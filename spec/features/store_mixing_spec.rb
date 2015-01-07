@@ -2,7 +2,7 @@ require 'spec_helper'
 
 # TODO clean this up holy cow
 
-feature 'Store mixing:' do
+feature 'Store mixing:', pending: 'DEPRECATEDDDDDDDDDDDD' do
   
   let!(:admin_role) {create(:admin_role)}
   let!(:user) {create(:user)}

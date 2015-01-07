@@ -20,7 +20,7 @@ describe Spree::StoresController do
     end
   end
 
-  describe 'on :show with 2 mutually populated stores' do
+  describe 'on :show with 2 mutually populated stores', pending: 'DEPRECATIO' do
     let!(:store1) { FactoryGirl.create(:store,
             name: 'Store 1',
             code: 'store1',

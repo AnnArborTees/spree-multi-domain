@@ -30,4 +30,30 @@ describe Spree::Store do
       store.default.should_not be_true
     end
   end
+
+  describe 'parent/children', story_319: true do
+    let!(:top) { create(:store, parent: nil) }
+    let!(:store1) { create(:store, parent: :top) }
+    let!(:store2) { create(:store, parent: :top) }
+    let!(:grandchild1) { create(:store, parent: store1) }
+    let!(:grandchild2) { create(:store, parent: store1) }
+    let!(:other_grandchild) { create(:store, parent: store2) }
+    let!(:ultra_grandchild) { create(:store, parent: grandchild2) }
+
+    describe '#all_children' do
+      let(:all_children) do
+        [store1, store2, grandchild1, grandchild2, other_grandchild, ultra_grandchild]
+      end
+
+      it 'returns all children, grandchildren, etc. recursively' do
+        expect(top.all_children - all_children).to eq []
+      end
+    end
+
+    describe '#parents_until' do
+      it 'returns all stores up the parental hirearchy including the given parent' do
+        expect(ultra_grandchild.parents_until(top)).to eq [grandchild2, store1, top]
+      end
+    end
+  end
 end
