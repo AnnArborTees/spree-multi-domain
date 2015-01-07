@@ -5,22 +5,31 @@ describe Spree::StoresController do
   describe 'on :show to a valid store' do
     let!(:store) { FactoryGirl.create(:store, seo_title: 'totally rad') }
 
-    it 'should return 200' do
-      spree_get :show, store_codes: store.slug
-      expect(response.response_code).to eq 200
+    context 'when given a slug', story_319: true do
+      it 'should return 200' do
+        spree_get :show, id: store.slug
+        expect(response.response_code).to eq 200
+      end
+    end
+
+    context 'when given an id', story_319: true do
+      it 'redirects to the slug' do
+        spree_get :show, id: store.id
+        expect(response).to redirect_to "/stores/#{store.slug}"
+      end
     end
 
     describe 'title', story_334: true do
       context 'when current_store has an seo_title' do
         it 'is current_store.seo_title' do
-          spree_get :show, store_codes: store.slug
+          spree_get :show, id: store.slug
           expect(controller.send(:title)).to include 'totally rad'
         end
       end
     end
   end
 
-  describe 'on :show with 2 mutually populated stores', pending: 'DEPRECATIO' do
+  describe 'on :show with 2 mutually populated stores', pending: 'EL DEPRECATIO' do
     let!(:store1) { FactoryGirl.create(:store,
             name: 'Store 1',
             code: 'store1',

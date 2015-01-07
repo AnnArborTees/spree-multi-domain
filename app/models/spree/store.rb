@@ -53,6 +53,13 @@ module Spree
       @cached_default ||= Store.default.first
     end
 
+    def matches_domain?(domain)
+      domains.split(/[,\n]/)
+             .reject(&:empty?)
+             .map(&:strip)
+             .any? { |d| domain.include?(d) || d.include?(domain) }
+    end
+
     def all_children
       all = children
       last_size = 0

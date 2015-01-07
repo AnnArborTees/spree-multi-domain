@@ -1,4 +1,5 @@
 require 'spec_helper'
+        require 'byebug'
 
 feature 'Parent stores', story_319: true do
   let!(:shop) { create :store, default: true, slug: 'shop', domains: 'shop.test.com' }
@@ -14,47 +15,67 @@ feature 'Parent stores', story_319: true do
 
   context 'http://shop.test.com' do
     before :each do
-      'http://shop.test.com'
+      Capybara.default_host = 'http://shop.test.com'
     end
 
     context 'visiting shop.test.com' do
-      scenario 'I see products in shop + shop children' do
-        visit 'shop.test.com'
-        %w[A1 A2 A3 B1 B3].each { |it| expect(page).to have_content(it) }
+      scenario 'the url is correct' do
+        visit '/'
+        expect(page.current_url).to eq 'http://shop.test.com/'
+      end
+
+      scenario 'I see products in shop + shop children', go: true do
+        visit '/'
+        expect(Sunspot.session).to be_a_search_for(Spree::Product)
+        expect(Sunspot.session).to have_search_params(:with, :store_ids, shop.id)
+        # %w[A1 A2 A3 B1 B3].each { |it| expect(page).to have_content(it) }
       end
 
       scenario 'searching for "A", I see "A" products in shop + shop children' do
-        visit 'shop.test.com/products?keywords=A'
-        %w[A1 A2 A3].each { |it| expect(page).to have_content(it) }
-        %w[B1 B3].each { |it| expect(page).to_not have_content(it) }
+        visit '/products?keywords=A'
+        expect(Sunspot.session).to be_a_search_for(Spree::Product)
+        expect(Sunspot.session).to have_search_params(:with, :store_ids, shop.id)
+        expect(Sunspot.session).to have_search_params(:keywords, 'A')
+        # %w[A1 A2 A3].each { |it| expect(page).to have_content(it) }
+        # %w[B1 B3].each { |it| expect(page).to_not have_content(it) }
       end
     end
 
     context 'visiting shop.test.com/stores/fandom' do
       scenario 'I see products in fandom + fandom children' do
-        visit 'shop.test.com/stores/fandom'
-        %w[A2 A3 B3].each { |it| expect(page).to have_content(it) }
-        expect(page).to_not have_content('A1')
+        visit '/stores/fandom'
+        expect(Sunspot.session).to be_a_search_for(Spree::Product)
+        expect(Sunspot.session).to have_search_params(:with, :store_ids, fandom.id)
+        # %w[A2 A3 B3].each { |it| expect(page).to have_content(it) }
+        # expect(page).to_not have_content('A1')
       end
 
       scenario 'searching for "A", I see "A" products in fandom + fandom children' do
-        visit 'shop.test.com/products?keywords=A&store=fandom'
-        %w[A2 A3].each { |it| expect(page).to have_content(it) }
-        %w[A1 B3].each { |it| expect(page).to_not have_content(it) }
+        visit '/products?keywords=A&store=fandom'
+        expect(Sunspot.session).to be_a_search_for(Spree::Product)
+        expect(Sunspot.session).to have_search_params(:with, :store_ids, fandom.id)
+        expect(Sunspot.session).to have_search_params(:keywords, 'A')
+        # %w[A2 A3].each { |it| expect(page).to have_content(it) }
+        # %w[A1 B3].each { |it| expect(page).to_not have_content(it) }
       end
     end
 
     context 'visiting shop.test.com/stores/starkid' do
       scenario 'I see products in starkid' do
-        visit 'shop.test.com/stores/starkid'
-        %w[A3 B3].each { |it| expect(page).to have_content(it) }
-        %w[A1 A2 B1].each { |it| expect(page).to_not have_content(it) }
+        visit '/stores/starkid'
+        expect(Sunspot.session).to be_a_search_for(Spree::Product)
+        expect(Sunspot.session).to have_search_params(:with, :store_ids, starkid.id)
+        # %w[A3 B3].each { |it| expect(page).to have_content(it) }
+        # %w[A1 A2 B1].each { |it| expect(page).to_not have_content(it) }
       end
 
       scenario 'searching for "A", I see "A" products in starkid' do
-        visit 'shop.test.com/products?keywords=A&store=starkid'
-        expect(page).to have_content 'A1'
-        %w[A2 A3 B1 B3].each { |it| expect(page).to_not have_content(it) }
+        visit '/products?keywords=A&store=starkid'
+        expect(Sunspot.session).to be_a_search_for(Spree::Product)
+        expect(Sunspot.session).to have_search_params(:with, :store_ids, starkid.id)
+        expect(Sunspot.session).to have_search_params(:keywords, 'A')
+        # expect(page).to have_content 'A1'
+        # %w[A2 A3 B1 B3].each { |it| expect(page).to_not have_content(it) }
       end
     end
   end
@@ -65,30 +86,45 @@ feature 'Parent stores', story_319: true do
     end
 
     context 'visiting fan.test.com' do
+      scenario 'the url is correct' do
+        visit '/'
+        expect(page.current_url).to eq 'http://fan.test.com/'
+      end
+
       scenario 'I see products in fandom + fandom children' do
-        visit 'fan.test.com'
-        %w[A2 A3 B3].each { |it| expect(page).to have_content(it) }
-        expect(page).to_not have_content('A1')
+        visit '/'
+        expect(Sunspot.session).to be_a_search_for(Spree::Product)
+        expect(Sunspot.session).to have_search_params(:with, :store_ids, fandom.id)
+        # %w[A2 A3 B3].each { |it| expect(page).to have_content(it) }
+        # expect(page).to_not have_content('A1')
       end
 
       scenario 'searching for "A", I see "A" products in fandom + fandom children' do
-        visit 'fan.test.com/products?keywords=A'
-        %w[A2 A3].each { |it| expect(page).to have_content(it) }
-        %w[A1 B3].each { |it| expect(page).to_not have_content(it) }
+        visit '/products?keywords=A'
+        expect(Sunspot.session).to be_a_search_for(Spree::Product)
+        expect(Sunspot.session).to have_search_params(:with, :store_ids, fandom.id)
+        expect(Sunspot.session).to have_search_params(:keywords, 'A')
+        # %w[A2 A3].each { |it| expect(page).to have_content(it) }
+        # %w[A1 B3].each { |it| expect(page).to_not have_content(it) }
       end
     end
 
     context 'visiting fan.test.com/stores/starkid' do
       scenario 'I see products in fandom and starkid' do
-        visit 'fan.test.com/stores/starkid'
-        %w[A2 A3 B3].each { |it| expect(page).to have_content(it) }
-        %w[A1 B1].each { |it| expect(page).to_not have_content(it) }
+        visit '/stores/starkid'
+        expect(Sunspot.session).to be_a_search_for(Spree::Product)
+        expect(Sunspot.session).to have_search_params(:with, :store_ids, starkid.id)
+        # %w[A2 A3 B3].each { |it| expect(page).to have_content(it) }
+        # %w[A1 B1].each { |it| expect(page).to_not have_content(it) }
       end
 
       scenario 'searching for "A", I see "A" products in fandom and starkid' do
-        visit 'fan.test.com/products?keywords=A&store=starkid'
-        %w[A2 A3].each { |it| expect(page).to have_content(it) }
-        %w[A1 B1 B3].each { |it| expect(page).to_not have_content(it) }
+        visit '/products?keywords=A&store=starkid'
+        expect(Sunspot.session).to be_a_search_for(Spree::Product)
+        expect(Sunspot.session).to have_search_params(:with, :store_ids, starkid.id)
+        expect(Sunspot.session).to have_search_params(:keywords, 'A')
+        # %w[A2 A3].each { |it| expect(page).to have_content(it) }
+        # %w[A1 B1 B3].each { |it| expect(page).to_not have_content(it) }
       end
     end
   end

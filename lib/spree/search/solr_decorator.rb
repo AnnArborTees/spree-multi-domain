@@ -5,7 +5,7 @@ Spree::Search::Solr.class_eval do
       fulltext params[:keywords]
 
       # SEARCH BY STORE
-      with(:store_ids, params[:current_store_ids]) if params[:current_store_ids]
+      with(:store_ids, params[:current_store_id]) if params[:current_store_id]
 
       # SEARCH BY TAXON
       if params[:taxon].present?

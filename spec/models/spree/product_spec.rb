@@ -15,6 +15,8 @@ describe Spree::Product do
     products_by_store.should_not include(product2)
   end
 
+  it { is_expected.to have_searchable_field :safe_name }
+  it { is_expected.to have_searchable_field :store_ids }
 
   context 'search', search: true do
     let!(:try_spree_current_user) { create :user }
@@ -23,12 +25,6 @@ describe Spree::Product do
     it 'is a sunspot search' do
       searcher = build_searcher({ store_id: store.id })
       expect(searcher).to respond_to :solr_search
-    end
-
-    it 'works properly' do
-      searcher = build_searcher(keywords: 'first')
-      expect(searcher.retrieve_products).to include product
-      expect(searcher.retrieve_products).to_not include product2
     end
   end
 

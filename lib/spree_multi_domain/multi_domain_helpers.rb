@@ -4,36 +4,22 @@ module SpreeMultiDomain
       receiver.send :helper, 'spree/products'
       receiver.send :helper, 'spree/taxons'
 
-      receiver.send :before_filter, :add_current_store_ids_to_params
+      receiver.send :before_filter, :add_current_store_id_to_params
       receiver.send :helper_method, :current_store
       receiver.send :helper_method, :current_tracker
     end
 
     def current_store
-      by_domain = current_store_for_domain
-      if session[:store]
-        if by_domain.empty?
-          @current_store = MixedStore.new(current_domain, session[:store])
-        else
-          @current_store = MixedStore.new(current_domain, by_domain, session[:store])
-        end
-      else
-        if not by_domain.empty?
-          @current_store = MixedStore.new(current_domain, by_domain)
-        elsif default_store
-          @current_store = MixedStore.new(current_domain, default_store)
-        else
-          nil
-        end
-      end
+      @current_store || domain_store || default_store
     end
 
     def current_store_for_domain
-      Spree::Store.by_domain(request.env['SERVER_NAME'])
+      Spree::Store.by_domain(request.env['SERVER_NAME']).first
     end
+    alias_method :domain_store, :current_store_for_domain
 
     def default_store
-      Spree::Store.default
+      Spree::Store.default.first
     end
 
     def current_domain
@@ -50,8 +36,8 @@ module SpreeMultiDomain
       @taxonomies
     end
 
-    def add_current_store_ids_to_params
-      params[:current_store_ids] = current_store.try(:ids) || current_store.try(:id)
+    def add_current_store_id_to_params
+      params[:current_store_id] = current_store.try(:id)
     end
 
   end

@@ -14,4 +14,6 @@ gem 'spree_solr', github: 'annarbortees/spree_solr', branch: branch
 
 gem 'database_cleaner'
 
+gem 'byebug'
+
 gemspec

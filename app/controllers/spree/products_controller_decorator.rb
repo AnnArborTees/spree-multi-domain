@@ -1,7 +1,8 @@
 Spree::ProductsController.class_eval do
   include Spree::TitleFromCurrentStore
 
-  before_filter :can_show_product, :only => :show
+  before_filter :can_show_product, only: :show
+  before_filter :assign_current_store_from_search, only: :index
 
   private
 
@@ -11,6 +12,14 @@ Spree::ProductsController.class_eval do
     		                            !current_store.contains_any_of?(@product.stores) : 
                                     !@product.stores.include?(current_store) )
       raise ActiveRecord::RecordNotFound
+    end
+  end
+
+  def assign_current_store_from_search
+    if params[:store]
+      @current_store = Spree::Store.find_by(slug: params[:store])
+      raise ActiveRecord::RecordNotFound if @current_store.nil?
+      add_current_store_id_to_params
     end
   end
 
