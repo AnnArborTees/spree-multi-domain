@@ -32,15 +32,15 @@ describe Spree::Store do
   end
 
   describe 'parent/children', story_319: true do
-    let!(:top) { create(:store, parent: nil) }
-    let!(:store1) { create(:store, parent: :top) }
-    let!(:store2) { create(:store, parent: :top) }
-    let!(:grandchild1) { create(:store, parent: store1) }
-    let!(:grandchild2) { create(:store, parent: store1) }
-    let!(:other_grandchild) { create(:store, parent: store2) }
-    let!(:ultra_grandchild) { create(:store, parent: grandchild2) }
+    let!(:top) { create(:store, slug: 'top', parent: nil) }
+    let!(:store1) { create(:store, slug: 'one', parent: top) }
+    let!(:store2) { create(:store, slug: 'two', parent: top) }
+    let!(:grandchild1) { create(:store, slug: 'gc1', parent: store1) }
+    let!(:grandchild2) { create(:store, slug: 'gc2', parent: store1) }
+    let!(:other_grandchild) { create(:store, slug: 'ogc', parent: store2) }
+    let!(:ultra_grandchild) { create(:store, slug: 'ugc', parent: grandchild2) }
 
-    describe '#all_children' do
+    describe '#all_children', all_children: true do
       let(:all_children) do
         [store1, store2, grandchild1, grandchild2, other_grandchild, ultra_grandchild]
       end
@@ -48,11 +48,23 @@ describe Spree::Store do
       it 'returns all children, grandchildren, etc. recursively' do
         expect(top.all_children - all_children).to eq []
       end
+
+      context 'on a childless store' do
+        it 'returns an empty list' do
+          expect(ultra_grandchild.all_children).to be_empty
+        end
+      end
     end
 
     describe '#parents_until' do
       it 'returns all stores up the parental hirearchy including the given parent' do
         expect(ultra_grandchild.parents_until(top)).to eq [grandchild2, store1, top]
+      end
+
+      context 'when the given parent is not in the hirearchy' do
+        it 'returns nil' do
+          expect(top.parents_until(store1)).to be_nil
+        end
       end
     end
   end

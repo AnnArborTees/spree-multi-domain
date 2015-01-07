@@ -16,6 +16,9 @@ module Spree
 
     has_and_belongs_to_many :promotion_rules, :class_name => 'Spree::Promotion::Rules::Store', :join_table => 'spree_promotion_rules_stores', :association_foreign_key => 'promotion_rule_id'
 
+    belongs_to :parent, class_name: 'Spree::Store', inverse_of: :children, foreign_key: 'parent_id'
+    has_many :children, class_name: 'Spree::Store', inverse_of: :parent, foreign_key: 'parent_id'
+
     validates :name, :code, :slug, :domains, :email, presence: true
     validates :slug, uniqueness: true, unless: proc { slug.nil? || slug.empty? }
 
@@ -48,6 +51,29 @@ module Spree
 
     def self.first_found_default
       @cached_default ||= Store.default.first
+    end
+
+    def all_children
+      all = children
+      last_size = 0
+      until all.size == last_size
+        last_size = all.size
+        all.map!(&:children).flatten!
+      end
+      all
+    end
+
+    def parents_until(top)
+      parents = [parent]
+      until parents.last.nil? || parents.last == top
+        parents << parents.last.parent
+      end
+
+      if parents.last.nil?
+        nil
+      else
+        parents
+      end
     end
 
     def ensure_default_exists_and_is_unique

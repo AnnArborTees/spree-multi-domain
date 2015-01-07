@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Parent stores', story_319: true do
+feature 'Parent stores', story_319: true do
   let!(:shop) { create :store, default: true, slug: 'shop', domains: 'shop.test.com' }
   let!(:fandom) { create :store, parent: shop, slug: 'fandom', domains: 'fan.test.com' }
   let!(:starkid) { create :store, parent: fandom, slug: 'starkid', domains: 'starkid.test.com' }
