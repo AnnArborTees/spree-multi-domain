@@ -14,7 +14,7 @@ feature 'With multi-domain stores' do
       stores: [default_store])
   }
 
-    scenario 'create a new store', js: false, wip: false do
+    scenario 'create a new store', js: false, pending: 'TODO disable sunspot for this' do
       visit '/admin'
       click_link 'Configuration'
       click_link 'Stores & Domains'
@@ -28,7 +28,7 @@ feature 'With multi-domain stores' do
       click_button 'Create'
     end
 
-    scenario 'edit a store', js: false, wip: false do
+    scenario 'edit a store', js: false, wip: false, pending: 'TODO disable sunspot for this' do
       visit '/admin'
       click_link 'Configuration'
       click_link 'Stores & Domains'

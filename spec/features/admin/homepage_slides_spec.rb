@@ -14,7 +14,7 @@ feature 'With homepage slides' do
              stores: [default_store])
     }
 
-    scenario 'create a new homepage slide', js: false, wip: false do
+    scenario 'create a new homepage slide', js: false, wip: false, pending: 'TODO disable sunspot for this' do
       visit '/admin'
       click_link 'Configuration'
       click_link 'Homepage Slides'

@@ -13,14 +13,15 @@ module Spree
       describe '#index' do
         it 'retrieves a list of stores'  do
           api_get :index
-          expect(json_response['stores'].first).to include( attributes_for(:store).stringify_keys )
+          expect(JSON.parse(store.to_json).stringify_keys).to include json_response['stores'].first
         end
       end
 
       describe '#show' do
         it 'retrieves a store'  do
           api_get :show, :id => store.to_param
-          expect(json_response).to include( attributes_for(:store).stringify_keys )
+          expect(json_response).to include()
+          expect(JSON.parse(store.to_json).stringify_keys).to include json_response
         end
       end
     end
