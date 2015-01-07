@@ -32,12 +32,10 @@ describe Spree::StoresController do
   describe 'on :show with 2 mutually populated stores', pending: 'EL DEPRECATIO' do
     let!(:store1) { FactoryGirl.create(:store,
             name: 'Store 1',
-            code: 'store1',
-            url_index: '0') }
+            code: 'store1') }
     let!(:store2) { FactoryGirl.create(:store,
             name: 'Store 2',
-            code: 'store2',
-            url_index: '1') }
+            code: 'store2') }
 
     let!(:product1) { FactoryGirl.create(:product,
             name: 'Product 1',

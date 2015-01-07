@@ -50,20 +50,27 @@ describe Spree::Store do
       end
 
       context 'on a childless store' do
-        it 'returns an empty list' do
-          expect(ultra_grandchild.all_children).to be_empty
+        it 'returns an empty array' do
+          expect(ultra_grandchild.all_children).to eq []
         end
       end
     end
 
-    describe '#parents_until' do
+    describe '#up_to' do
       it 'returns all stores up the parental hirearchy including the given parent' do
-        expect(ultra_grandchild.parents_until(top)).to eq [grandchild2, store1, top]
+        expect(ultra_grandchild.up_to(top).map(&:slug))
+          .to eq [ultra_grandchild, grandchild2, store1, top].map(&:slug)
       end
 
       context 'when the given parent is not in the hirearchy' do
-        it 'returns nil' do
-          expect(top.parents_until(store1)).to be_nil
+        it 'returns empty array' do
+          expect(top.up_to(store1)).to eq []
+        end
+      end
+
+      context 'when passed self' do
+        it 'returns array with just self in it' do
+          expect(top.up_to(top)).to eq [top]
         end
       end
     end

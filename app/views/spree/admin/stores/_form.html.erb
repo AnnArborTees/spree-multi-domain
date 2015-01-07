@@ -43,6 +43,13 @@
   </div>
 
   <div class="four columns">
+    <%= f.field_container :parent_id do %>
+      <%= f.label :parent_id, 'Parent Store' %>
+      <%= f.select :parent_id, options_from_collection_for_select(Spree::Store.where.not(id: f.object.id), :id, :name, f.object.parent_id), include_blank: true %>
+    <% end %>
+  </div>
+
+  <div class="four columns">
     <%= f.field_container :default_currency do %>
       <%= f.label :default_currency, Spree.t(:default_currency) %>
       <%= f.text_field :default_currency %>
@@ -61,14 +68,6 @@
       <%= f.label :domains, Spree.t(:domains) %><br />
       <%= f.text_area :domains, :cols => 60, :rows => 4, :class => 'fullwidth' %>
       <%= error_message_on :store, :domains %>
-    <% end %>
-  </div>
-
-  <div class="four columns">
-    <%= f.field_container :url_index do %>
-      <%= f.label :url_index, "URL Position" %>
-      <span id='url-index-ex-space'></span><br />
-      <%= f.number_field :url_index, id: 'url-index-picker', maxlength: '2', size: '2' %>
     <% end %>
   </div>
 

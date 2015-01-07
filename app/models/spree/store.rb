@@ -24,6 +24,7 @@ module Spree
 
     before_save :ensure_default_exists_and_is_unique
     before_validation proc { self.slug = code if slug.nil? }
+    before_validation proc { self.parent_id = nil if parent_id == id }
 
     scope :default, lambda { where(:default => true) }
     scope :by_domain, lambda { |domain| where("domains like ?", "%#{domain}%") }
@@ -70,16 +71,28 @@ module Spree
       all
     end
 
-    def parents_until(top)
-      parents = [parent]
+    def up_to_top
+      parents = [self, parent]
+      until parents.last.nil?
+        parents << parents.last.parent 
+      end
+      parents[0...-1]
+    end
+
+    def up_to(top)
+      return up_to_top if top == :top
+      return [self] if self == top
+      return [] if parent.nil?
+
+      parents = [self, parent]
       until parents.last.nil? || parents.last == top
         parents << parents.last.parent
       end
 
       if parents.last.nil?
-        nil
+        []
       else
-        parents
+        parents.compact
       end
     end
 
