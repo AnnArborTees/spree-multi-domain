@@ -19,6 +19,8 @@ Spree::ProductsController.class_eval do
     if params[:store]
       @current_store = Spree::Store.find_by(slug: params[:store])
       raise ActiveRecord::RecordNotFound if @current_store.nil?
+
+      @last_searched_store = @current_store.slug
       add_current_store_id_to_params
     end
   end
