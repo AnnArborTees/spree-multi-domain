@@ -55,7 +55,7 @@ module Spree
     end
 
     def matches_domain?(domain)
-      domains.split(/[,\n]/)
+      domains.split(/[,\s]/)
              .reject(&:empty?)
              .map(&:strip)
              .any? { |d| domain.include?(d) || d.include?(domain) }

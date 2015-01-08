@@ -6,18 +6,23 @@ module SpreeMultiDomain
 
       receiver.send :before_filter, :add_current_store_id_to_params
       receiver.send :helper_method, :current_store
+      receiver.send :helper_method, :session_store
       receiver.send :helper_method, :domain_store
       receiver.send :helper_method, :current_tracker
     end
 
     def current_store
-      @current_store || domain_store || default_store
+      @current_store || session_store || domain_store || default_store
     end
 
     def current_store_for_domain
       @domain_store ||= Spree::Store.by_domain(request.env['SERVER_NAME']).first
     end
     alias_method :domain_store, :current_store_for_domain
+
+    def session_store
+      Spree::Store.find_by(id: session[:store])
+    end
 
     def default_store
       Spree::Store.default.first
@@ -38,7 +43,11 @@ module SpreeMultiDomain
     end
 
     def add_current_store_id_to_params
-      params[:current_store_id] = current_store.try(:id)
+      id = current_store.try(:id)
+      if id
+        params[:current_store_id] = id
+        session[:store] = id
+      end
     end
 
   end
