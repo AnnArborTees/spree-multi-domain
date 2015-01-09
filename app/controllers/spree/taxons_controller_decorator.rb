@@ -9,4 +9,9 @@ Spree::TaxonsController.class_eval do
     @taxonomies = get_taxonomies
   end
 
+  def accurate_title
+    return super unless params[:action] == 'show'
+    "#{@taxon.name} - #{current_store.seo_title}"
+  end
+
 end

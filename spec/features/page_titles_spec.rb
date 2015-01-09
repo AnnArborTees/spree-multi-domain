@@ -21,6 +21,10 @@ feature 'Page titles', story_336: true do
   end
   let(:product) { create :product, name: 'THE Product', taxons: [taxon], stores: [store] }
 
+  before :each do
+    allow_any_instance_of(Spree::StoreController).to receive(:domain_store).and_return store
+  end
+
   describe 'product pages' do
     context 'when there is a taxon' do
       scenario 'have a page title of <ProductName - TaxonName - StoreSeoTitle>' do
@@ -39,7 +43,7 @@ feature 'Page titles', story_336: true do
 
   describe 'taxon pages' do
     scenario 'have a page title of <TaxonName - StoreSeoTitle>' do
-      visit spree.taxon_path(taxon)
+      visit spree.nested_taxons_path(taxon)
       expect(page).to have_title 'The Taxon - This is The Store'
     end
   end

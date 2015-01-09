@@ -4,10 +4,6 @@ describe Spree::ProductsController do
 
   let!(:product) { FactoryGirl.create(:product) }
 
-  context 'title', story_334: true do
-    it { is_expected.to be_a Spree::TitleFromCurrentStore }
-  end
-
   describe 'on :show to a product without any stores' do
     let!(:store) { FactoryGirl.create(:store) }
 

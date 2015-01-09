@@ -26,11 +26,12 @@ Gem::Specification.new do |s|
   s.add_dependency 'sunspot_solr'
   s.add_dependency 'spree_solr', version
 
-  s.add_development_dependency 'capybara', '~> 1.1.4'
+  s.add_development_dependency 'capybara', '~> 2.1.0'
   s.add_development_dependency 'coffee-rails'
   s.add_development_dependency 'factory_girl', '~> 4.3.0'
   s.add_development_dependency 'ffaker'
   s.add_development_dependency 'rspec-rails',  '~> 2.7'
   s.add_development_dependency 'sunspot_matchers'
   s.add_development_dependency 'sqlite3'
+  s.add_development_dependency 'selenium-webdriver'
 end

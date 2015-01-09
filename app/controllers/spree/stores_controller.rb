@@ -1,5 +1,4 @@
 class Spree::StoresController < Spree::StoreController
-  include Spree::TitleFromCurrentStore
   helper 'spree/products'
 
   def index
@@ -24,6 +23,15 @@ class Spree::StoresController < Spree::StoreController
     @taxonomies = @store.taxonomies.includes(root: :children)
 
     render 'spree/home/index'
+  end
+
+  def accurate_title
+    return super unless params[:action] == 'show'
+    if @store == domain_store
+      @store.seo_title
+    else
+      "#{@store.seo_title} - #{domain_store.seo_title}"
+    end
   end
 
   private

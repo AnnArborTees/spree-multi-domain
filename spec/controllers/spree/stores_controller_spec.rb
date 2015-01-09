@@ -18,15 +18,6 @@ describe Spree::StoresController do
         expect(response).to redirect_to "/stores/#{store.slug}"
       end
     end
-
-    describe 'title', story_334: true do
-      context 'when current_store has an seo_title' do
-        it 'is current_store.seo_title' do
-          spree_get :show, id: store.slug
-          expect(controller.send(:title)).to include 'totally rad'
-        end
-      end
-    end
   end
 
   describe 'on :show with 2 mutually populated stores', pending: 'EL DEPRECATIO' do

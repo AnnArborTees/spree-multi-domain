@@ -1,8 +1,15 @@
 Spree::ProductsController.class_eval do
-  include Spree::TitleFromCurrentStore
-
   before_filter :can_show_product, only: :show
   before_filter :assign_current_store_from_search, only: :index
+
+  def accurate_title
+    return super unless params[:action] == 'show'
+    if @taxon
+      "#{@product.name} - #{@taxon.name} - #{current_store.seo_title}"
+    else
+      "#{@product.name} - #{current_store.seo_title}"
+    end
+  end
 
   private
 

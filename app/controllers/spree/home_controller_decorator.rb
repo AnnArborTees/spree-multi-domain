@@ -8,5 +8,9 @@ module Spree
       @products = @searcher.retrieve_products
       @taxonomies = get_taxonomies
     end
+
+    def accurate_title
+      current_store.seo_title
+    end
   end
 end
