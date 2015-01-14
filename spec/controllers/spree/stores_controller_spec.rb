@@ -15,7 +15,7 @@ describe Spree::StoresController do
     context 'when given an id', story_319: true do
       it 'redirects to the slug' do
         spree_get :show, id: store.id
-        expect(response).to redirect_to "/stores/#{store.slug}"
+        expect(response).to redirect_to "/s/#{store.slug}"
       end
     end
   end

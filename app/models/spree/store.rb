@@ -32,12 +32,12 @@ module Spree
     has_attached_file :logo,
       :styles => { :mini => '48x48>', :small => '100x100>', :medium => '250x250>' },
       :default_style => :medium,
-      :url => 'stores/:id/:style/:basename.:extension',
-      :path => 'stores/:id/:style/:basename.:extension',
+      :url => 's/:id/:style/:basename.:extension',
+      :path => 's/:id/:style/:basename.:extension',
       :convert_options => { :all => '-strip -auto-orient' }
 
     def path(*args)
-      "/stores/#{slug}"
+      "/s/#{slug}"
     end
 
     # TODO remove this
