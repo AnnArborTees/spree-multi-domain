@@ -61,6 +61,11 @@ module Spree
              .any? { |d| domain.include?(d) || d.include?(domain) }
     end
 
+    def title
+      return seo_title unless seo_title.nil? || seo_title.empty?
+      name
+    end
+
     def all_children
       all = []
       children = self.children.to_a

@@ -5,9 +5,9 @@ Spree::ProductsController.class_eval do
   def accurate_title
     return super unless params[:action] == 'show'
     if @taxon
-      "#{@product.name} - #{@taxon.name} - #{current_store.seo_title}"
+      "#{@product.name} - #{@taxon.name} - #{current_store.title}"
     else
-      "#{@product.name} - #{current_store.seo_title}"
+      "#{@product.name} - #{current_store.title}"
     end
   end
 

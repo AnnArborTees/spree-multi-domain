@@ -11,7 +11,7 @@ Spree::TaxonsController.class_eval do
 
   def accurate_title
     return super unless params[:action] == 'show'
-    "#{@taxon.name} - #{current_store.seo_title}"
+    "#{@taxon.name} - #{current_store.title}"
   end
 
 end

@@ -28,9 +28,9 @@ class Spree::StoresController < Spree::StoreController
   def accurate_title
     return super unless params[:action] == 'show'
     if @store == domain_store
-      @store.seo_title
+      @store.title
     else
-      "#{@store.seo_title} - #{domain_store.seo_title}"
+      "#{@store.title} - #{domain_store.title}"
     end
   end
 
