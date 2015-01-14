@@ -16,7 +16,7 @@ module SpreeMultiDomain
     end
 
     def current_store_for_domain
-      @domain_store ||= Spree::Store.by_domain(request.env['SERVER_NAME']).first
+      @domain_store ||= Spree::Store.by_domain(current_domain).first
     end
     alias_method :domain_store, :current_store_for_domain
 
