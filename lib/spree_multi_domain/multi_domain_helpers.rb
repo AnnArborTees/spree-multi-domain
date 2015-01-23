@@ -42,12 +42,20 @@ module SpreeMultiDomain
       @taxonomies
     end
 
-    def add_current_store_id_to_params
-      id = current_store.try(:id)
+    def add_store_id_to_params(store)
+      id = case store
+           when Fixnum then store
+           else store.try(:id)
+           end
+
       if id
         params[:current_store_id] = id
         session[:store] = id
       end
+    end
+
+    def add_current_store_id_to_params
+      add_store_id_to_params(current_store)
     end
 
   end

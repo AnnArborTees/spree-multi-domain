@@ -15,15 +15,33 @@ Spree::ProductsController.class_eval do
 
   def can_show_product
     @product ||= Spree::Product.friendly.find(params[:id])
-    if @product.stores.empty? || ( current_store.respond_to?('contains_any_of?') ? 
-    		                            !current_store.contains_any_of?(@product.stores) : 
-                                    !@product.stores.include?(current_store) )
-      raise ActiveRecord::RecordNotFound
+    raise ActiveRecord::RecordNotFound if @product.stores.empty?
+
+    unless @product.stores.include?(current_store) ||
+           @product.stores.include?(domain_store)
+
+      # If we do a broad search, and click on a product that belongs
+      # to the current store's children but NOT the current store,
+      # then we want to set the current substore to one of the
+      # product's stores.
+      store_is_in_hirearchy = false
+      @product.stores.find_each do |product_store|
+        difference = product_store.up_to(current_store)
+        next if difference.empty?
+
+        add_store_id_to_params(product_store)
+        store_is_in_hirearchy = true
+        break
+      end
+
+      raise ActiveRecord::RecordNotFound unless store_is_in_hirearchy
     end
   end
 
   def assign_current_store_from_search
-    if params[:store]
+    if params[:keywords] && !params[:store]
+      @current_store = domain_store
+    elsif params[:store]
       @current_store = Spree::Store.find_by(slug: params[:store])
       raise ActiveRecord::RecordNotFound if @current_store.nil?
 
