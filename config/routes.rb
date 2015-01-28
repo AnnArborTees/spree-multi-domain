@@ -12,4 +12,6 @@ Spree::Core::Engine.routes.append do
     resources :stores, only: [:index, :show]
   end
 
+  get 'products/ga/:id', to: 'products#analytics_click'
+
 end

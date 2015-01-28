@@ -20,6 +20,6 @@ Spree::Tracker.class_eval do
   end
 
   def analytics_name
-    store.code.underscore
+    master? ? 'master' : store.code.underscore
   end
 end

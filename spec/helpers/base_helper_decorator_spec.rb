@@ -55,7 +55,7 @@ describe Spree::BaseHelper do
       end
     end
 
-    describe '#ga_create' do
+    describe '#ga_create', pending: 'no longer in use' do
       context 'given a tracker' do
         it 'returns a valid javascript call to aatc_ga with the trackers analytics name' do
           expect(helper.ga_create(current_store_tracker))
@@ -64,7 +64,7 @@ describe Spree::BaseHelper do
       end
     end
 
-    describe '#ga_send_pageview' do
+    describe '#ga_send_pageview', pending: 'no longer in use' do
       context 'given a tracker' do
         it 'returns a valid javascript call to aatc_ga with tracker name.send' do
           expect(helper.ga_send_pageview(current_store_tracker))
@@ -73,26 +73,48 @@ describe Spree::BaseHelper do
       end
     end
 
-    describe '#ec_list' do
-      # TODO determine list type based on controller and action
+    describe '#ec_list', ec_list: true do
+      let(:spree_home_index) do
+        { controller: 'spree/home',
+          action: 'index'
+        }.with_indifferent_access
+      end
+      let(:spree_products_index) do
+        { controller: 'spree/products',
+          action: 'index'
+        }.with_indifferent_access
+      end
+      subject { helper.ec_list }
+
+      context 'when params == { action: "index", controller: "spree/home" }' do
+        before { allow(helper).to receive(:params).and_return spree_home_index }
+        it { is_expected.to eq 'Homepage' }
+      end
+
+      context 'when params == { action: "index", controller: "spree/products" }' do
+        before { allow(helper).to receive(:params).and_return spree_products_index }
+        it { is_expected.to eq 'Search Results' }
+      end
     end
 
-    describe '#ga_ec_add_impression' do
-      context 'given a tracker, a product, and a position' do
-        it 'returns a valid ec:addImpression call with appropriate attributes' do
+    describe '#ga_ec_product' do
+      context 'given a product and a position' do
+        it 'returns a valid js object with appropriate attributes' do
           allow(product).to receive(:analytics_category).and_return 'Apparel/T-Shirts'
           allow(product).to receive(:analytics_brand).and_return 'Ann Arbor Tees'
+          allow(helper).to receive(:ec_list).and_return 'Homepage'
 
-          result = helper.ga_ec_add_impression(current_store_tracker, product, 1)
-          expect(result).to include "ga('ec:addImpression', {"
-          expect(result).to include "'id': '#{product.id}',"
-          expect(result).to include "'name': '#{product.name}',"
-          expect(result).to include "'type': 'view',"
-          expect(result).to include "'category': 'Apparel/T-Shirts',"
-          expect(result).to include "'brand': 'Ann Arbor Tees',"
-          expect(result).to include "'list': 'homepage',"
-          expect(result).to include "'position': 1"
-          expect(result).to include "});"
+          result = helper.ga_ec_product(product, 1)
+          expect(result).to include %({)
+          expect(result).to include %("id":"#{product.id}")
+          expect(result).to include %("name":"#{product.name}")
+          # expect(result).to include %("type":"view")
+          expect(result).to include %("category":"Apparel/T-Shirts")
+          expect(result).to include %("brand":"Ann Arbor Tees")
+          expect(result).to include %("list":"Homepage")
+          expect(result).to include %("position":1)
+          expect(result).to include %("price":"#{product.price}")
+          expect(result).to include %(})
         end
       end
     end

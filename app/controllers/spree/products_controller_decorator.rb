@@ -1,6 +1,11 @@
 Spree::ProductsController.class_eval do
-  before_filter :can_show_product, only: :show
+  before_filter :can_show_product, only: [:show, :analytics_click]
   before_filter :assign_current_store_from_search, only: :index
+
+  def analytics_click
+    @product = Spree::Product.friendly.find(params[:id])
+    respond_to :js
+  end
 
   def accurate_title
     return super unless params[:action] == 'show'

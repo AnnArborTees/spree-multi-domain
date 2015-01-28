@@ -9,17 +9,67 @@
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','<%= analytics_js %>','aatc_ga');
 
-<% relevant_trackers.each do |tracker| %>
-  <%= ga_create(tracker) %>
-  <%= ga_require(tracker, 'ec') %>
+var trackers = [<%= relevant_trackers.map { |t| "'#{t.analytics_name}'" }.join(', ').html_safe %>];
+var trackerIds = [<%= relevant_trackers.map { |t| "'#{t.analytics_id}'" }.join(', ').html_safe %>];
+var productObjects = {};
+var productObject = undefined;
 
-  <% count = 0 %>
-  <% @products.try(:each) do |product| %>
-    <% count += 1 %>
-    <%= ga_ec_add_impression(tracker, product, count) %>
+for (var i = 0; i < trackers.length; i++) {
+  var t = trackers[i];
+  var id = trackerIds[i];
+
+  aatc_ga('create', id, 'auto', { 'name': t });
+  aatc_ga(t+'.require', 'ec');
+
+  <% if params[:controller] == 'spree/products' && params[:action] == 'show' %>
+      productObject = <%= ga_ec_product(@product) %>;
+      aatc_ga(t+'.ec:addImpression', productObject);
+      aatc_ga(t+'.ec:addProduct', productObject);
+      aatc_ga(t+'.ec:setAction', 'detail');
+
+  <% else %>
+
+    <% count = 0 %>
+    <% @products.try(:each) do |product| %>
+      <% count += 1 %>
+      productObjects['<%= product.id %>'] = <%= ga_ec_product(product, count) %>;
+      aatc_ga(t+'.ec:addImpression', productObjects['<%= product.id %>']);
+    <% end %>
   <% end %>
 
-  <%= ga_send_pageview(tracker) %>
-<% end %>
+  aatc_ga(t+'.send', 'pageview');
+}
+
+$(function() {
+  <% if params[:controller] == 'spree/products' && params[:action] == 'show' %>
+    // TODO add to cart listener!
+  <% else %>
+    <% @products.try(:each) do |product| %>
+
+    $('#product_<%=product.id%>').find('a').click(function() {
+      if (!window.aatc_ga.loaded) return true;
+
+      var product = productObjects['<%=product.id%>'];
+      var finishedSends = 0;
+      var originalUrl = $(this).attr('href');
+
+      for (var i = 0; i < trackers.length; i++) {
+        var t = trackers[i];
+
+        aatc_ga(t+'.ec:addProduct', product);
+        aatc_ga(t+'.ec:setAction', 'click', {list: '<%= ec_list %>'});
+        aatc_ga(t+'.send', 'event', 'UX', 'click', 'Results', {
+          hitCallback: function() {
+            finishedSends += 1;
+            if (finishedSends >= trackers.length)
+              document.location = originalUrl;
+          }
+        });
+      }
+      return false;
+    });
+    <% end %>
+  <% end %>
+});
 
 </script>

@@ -51,39 +51,46 @@ module Spree
       "//www.google-analytics.com/analytics#{'_debug' unless Rails.env.production?}.js"
     end
 
-    def ga_method(tracker, method)
-      tracker.master? ? method : "#{tracker.analytics_name}.#{method}"
-    end
-
-    def ga_create(tracker)
-      name_obj = tracker.master? ? 'null' : "{'name': '#{tracker.analytics_name}'}"
-      "aatc_ga('create', '#{tracker.analytics_id}', 'auto', #{name_obj});".html_safe
-    end
-
-    def ga_require(tracker, plugin)
-      "aatc_ga('#{ga_method(tracker, 'require')}', '#{plugin}');".html_safe
-    end
-
-    def ga_send_pageview(tracker)
-      "aatc_ga('#{ga_method(tracker, 'send')}', 'pageview');".html_safe
-    end
-
     def ec_list
-      # TODO
-      'homepage'
+      if params[:controller] == 'spree/home'
+        return 'Homepage'
+      end
+      if params[:controller] == 'spree/products' && params[:action] == 'index'
+        return 'Search Results'
+      end
+      # 'Product View'
     end
 
-    def ga_ec_add_impression(tracker, product, position)
-%<aatc_ga('#{ga_method(tracker, 'ec:addImpression')}', {
-  'id': '#{product.id}',
-  'name': '#{product.name.gsub("'", "\\\\'")}',
-  'type': 'view',
-  'category': '#{product.try(:analytics_category) || 'null'}',
-  'brand': '#{product.try(:analytics_brand) || 'null'}',
-  'list': '#{ec_list}',
-  'position': #{position},
-});>
+    def ga_ec_product(product, position = 1, additional = {})
+      # %<
+      # {
+      #   'id': '#{product.id}',
+      #   'name': '#{product.name.gsub("'", "\\\\'")}',
+      #   'type': 'view',
+      #   'category': '#{product.try(:analytics_category) || 'null'}',
+      #   'brand': '#{product.try(:analytics_brand) || 'null'}',
+      #   'list': '#{ec_list}',
+      #   'position': #{position},
+      #   'price': '#{product.price}'
+      # }>.html_safe
+
+      { id: product.id.to_s,
+        name: product.name,
+        category: product.try(:analytics_category),
+        brand: product.try(:analytics_brand),
+        list: ec_list,
+        position: position,
+        price: product.price.to_s
+      }
+        .merge(additional)
+        .merge(additional_ga_ec_product_fields(product))
+        .to_json
         .html_safe
     end
+    # Override this to add additional default fields
+    def additional_ga_ec_product_fields(_product)
+      {}
+    end
+
   end
 end
