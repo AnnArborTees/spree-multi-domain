@@ -19,6 +19,8 @@ module Spree
     belongs_to :parent, class_name: 'Spree::Store', inverse_of: :children, foreign_key: 'parent_id'
     has_many :children, class_name: 'Spree::Store', inverse_of: :parent, foreign_key: 'parent_id'
 
+    has_many :trackers, class_name: 'Spree::Tracker', inverse_of: :store
+
     validates :name, :code, :slug, :domains, :email, presence: true
     validates :slug, uniqueness: true, unless: proc { slug.nil? || slug.empty? }
 

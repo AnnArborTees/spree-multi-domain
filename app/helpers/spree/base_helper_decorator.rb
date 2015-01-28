@@ -37,5 +37,53 @@ module Spree
     def true_false_yes_no(bool)
       bool ? 'Yes'  : 'No'
     end
+
+    def relevant_trackers
+      @relevant_trackers ||= begin
+        trackers = [Spree::Tracker.master].compact
+        trackers += current_store.trackers
+        trackers += @order.trackers if @order
+        trackers.uniq
+      end
+    end
+
+    def analytics_js
+      "//www.google-analytics.com/analytics#{'_debug' unless Rails.env.production?}.js"
+    end
+
+    def ga_method(tracker, method)
+      tracker.master? ? method : "#{tracker.analytics_name}.#{method}"
+    end
+
+    def ga_create(tracker)
+      name_obj = tracker.master? ? 'null' : "{'name': '#{tracker.analytics_name}'}"
+      "aatc_ga('create', '#{tracker.analytics_id}', 'auto', #{name_obj});".html_safe
+    end
+
+    def ga_require(tracker, plugin)
+      "aatc_ga('#{ga_method(tracker, 'require')}', '#{plugin}');".html_safe
+    end
+
+    def ga_send_pageview(tracker)
+      "aatc_ga('#{ga_method(tracker, 'send')}', 'pageview');".html_safe
+    end
+
+    def ec_list
+      # TODO
+      'homepage'
+    end
+
+    def ga_ec_add_impression(tracker, product, position)
+%<aatc_ga('#{ga_method(tracker, 'ec:addImpression')}', {
+  'id': '#{product.id}',
+  'name': '#{product.name.gsub("'", "\\\\'")}',
+  'type': 'view',
+  'category': '#{product.try(:analytics_category) || 'null'}',
+  'brand': '#{product.try(:analytics_brand) || 'null'}',
+  'list': '#{ec_list}',
+  'position': #{position},
+});>
+        .html_safe
+    end
   end
 end
