@@ -1,3 +1,28 @@
+function initializeAnalytics() {
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','<%= analytics_js %>','aatc_ga');
+
+
+  window.trackers = [<%= relevant_trackers.map { |t| "'#{t.analytics_name}'" }.join(', ').html_safe %>];
+  window.trackerIds = [<%= relevant_trackers.map { |t| "'#{t.analytics_id}'" }.join(', ').html_safe %>];
+  window.productObjects = {};
+  window.productObject = undefined;
+}
+
+function createTrackers(forEachTracker) {
+  eachTrackerIn(trackers, function(t, i) {
+    var id = trackerIds[i];
+
+    aatc_ga('create', id, 'auto', { 'name': t.name });
+    t.ga('require', 'ec');
+    t.ga('set', '&cu', '<%= current_currency %>');
+
+    forEachTracker(t, i);
+  });
+}
+
 function eachTrackerIn(trackers, proc) {
   var finishedSends = 0;
 
