@@ -71,7 +71,6 @@ $(function() {
       $('#update-cart').on('submit.analytics', function() {
         if (!window.aatc_ga.loaded) return true;
 
-        var finishedSends = 0;
         var form = $(this);
         var products = [];
 
@@ -82,23 +81,16 @@ $(function() {
 
         if (products.length === 0) return true;
 
-        for (var i = 0; i < trackers.length; i++) {
-          var t = trackers[i];
-
+        eachTrackerIn(trackers, function(t) {
           for (var j = 0; j < products.length; j++)
-            aatc_ga(t+'.ec:addProduct', products[j]);
+            t.ga('ec:addProduct', products[j]);
+          t.ga('ec:setAction', 'remove');
 
-          aatc_ga(t+'.ec:setAction', 'remove');
-          aatc_ga(t+'.send', 'event', 'UX', 'click', 'remove from cart', {
-            hitCallback: function() {
-              finishedSends += 1;
-              if (finishedSends >= trackers.length) {
-                form.off('submit.analytics');
-                form.submit();
-              }
-            }
+          t.sendClick('remove from cart', function() {
+            form.off('submit.analytics');
+            form.submit();
           });
-        }
+        });
 
         event.stopPropagation();
         return false;
