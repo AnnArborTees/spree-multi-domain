@@ -21,19 +21,24 @@ eachTrackerIn(trackers, function(t, i) {
 
   aatc_ga('create', id, 'auto', { 'name': t.name });
   t.ga('require', 'ec');
+  t.ga('set', '&cu', '<%= current_currency %>');
 
   <% if params[:controller] == 'spree/products' && params[:action] == 'show' %>
-      productObject = <%= ga_ec_product(@product) %>;
-      t.ga('ec:addImpression', productObject);
-      t.ga('ec:addProduct', productObject);
-      t.ga('ec:setAction', 'detail');
+    productObject = <%= ga_ec_product(@product) %>;
+    t.ga('ec:addImpression', productObject);
+    t.ga('ec:addProduct', productObject);
+    t.ga('ec:setAction', 'detail');
 
+  <% elsif order_just_completed? && params[:controller] == 'spree/orders' && params[:action] == 'show' %>
+
+    <% @order.line_items.each.with_index(1) do |line_item, index| %>
+      t.ga('ec:addProduct', <%= ga_ec_product(line_item.product, index, quantity: line_item.quantity) %>);
+    <% end %>
+    t.ga('ec:setAction', 'purchase', <%= ga_ec_purchase(@order, current_store) %>);
   <% else %>
 
-    <% count = 0 %>
-    <% @products.try(:each) do |product| %>
-      <% count += 1 %>
-      productObjects['<%= product.id %>'] = <%= ga_ec_product(product, count) %>;
+    <% @products.try(:each).try(:with_index, 1) do |product, index| %>
+      productObjects['<%= product.id %>'] = <%= ga_ec_product(product, index) %>;
       t.ga('ec:addImpression', productObjects['<%= product.id %>']);
     <% end %>
   <% end %>
@@ -96,8 +101,10 @@ $(function() {
         return false;
       });
 
+  <% elsif order_just_completed? && params[:controller] == 'spree/orders' && params[:action] == 'show' %>
+
   <% else %>
-    <% # We assume any @products are worth an impression. %>
+    <% # Clicking a product should trigger an event. %>
 
     $('li.product a').click(function() {
       if (!window.aatc_ga.loaded) return true;

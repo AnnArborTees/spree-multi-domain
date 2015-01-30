@@ -43,7 +43,11 @@ module Spree
         trackers = [Spree::Tracker.master].compact
         trackers += current_store.trackers
 
-        order = Spree::Order.find(session[:order_id]) if session[:order_id]
+        if session[:order_id]
+          order = Spree::Order.find(session[:order_id])
+        else
+          order = @order
+        end
         trackers += order.trackers if order
 
         trackers.uniq
@@ -87,6 +91,21 @@ module Spree
     # Override this to add additional (or change) default fields
     def additional_ga_ec_product_fields(_product)
       {}
+    end
+
+    def ga_ec_purchase(order, store)
+      { id: order.number,
+        affiliation: store.name,
+        revenue: order.total,
+        tax: order.included_tax_total + order.additional_tax_total,
+        shipping: order.ship_total
+      }
+        .to_json
+        .html_safe
+    end
+
+    def order_just_completed?
+      params[:checkout_complete]
     end
 
   end
