@@ -16,7 +16,7 @@ module SpreeMultiDomain
     end
 
     def current_store_for_domain
-      @domain_store ||= Spree::Store.by_domain(request.env['SERVER_NAME']).first
+      @domain_store ||= Spree::Store.by_domain(current_domain).first
     end
     alias_method :domain_store, :current_store_for_domain
 
@@ -42,12 +42,20 @@ module SpreeMultiDomain
       @taxonomies
     end
 
-    def add_current_store_id_to_params
-      id = current_store.try(:id)
+    def add_store_id_to_params(store)
+      id = case store
+           when Fixnum then store
+           else store.try(:id)
+           end
+
       if id
         params[:current_store_id] = id
         session[:store] = id
       end
+    end
+
+    def add_current_store_id_to_params
+      add_store_id_to_params(current_store)
     end
 
   end

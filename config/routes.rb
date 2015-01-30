@@ -4,9 +4,9 @@ Spree::Core::Engine.routes.append do
     resources :homepage_slides
     resources :homepages
   end
-  # get 'stores', to: 'stores#index'
-  # get 'stores/*store_codes', to: 'stores#show'
-  resources :stores, only: [:index, :show]
+
+  resources :stores, only: [:index, :show], path: 's'
+  get '/stores/:id', to: redirect('/s/%{id}')
 
   namespace :api, :defaults => { :format => 'json' } do
     resources :stores, only: [:index, :show]

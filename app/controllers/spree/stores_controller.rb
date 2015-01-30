@@ -15,6 +15,7 @@ class Spree::StoresController < Spree::StoreController
     @store = @current_store = Spree::Store.find_by(slug: params[:id])
 
     return render_404 if @store.nil?
+    return redirect_to spree.root_path if @store == domain_store
 
     add_current_store_id_to_params
 
@@ -26,11 +27,12 @@ class Spree::StoresController < Spree::StoreController
   end
 
   def accurate_title
+    store = @store || current_store
     return super unless params[:action] == 'show'
-    if @store == domain_store
-      @store.seo_title
+    if store == domain_store
+      store.title
     else
-      "#{@store.seo_title} - #{domain_store.seo_title}"
+      "#{store.title} - #{domain_store.title}"
     end
   end
 

@@ -51,9 +51,9 @@ feature 'Parent stores', story_319: true do
       end
     end
 
-    context 'visiting shop.test.com/stores/fandom' do
+    context 'visiting shop.test.com/s/fandom' do
       scenario 'I see products in fandom' do
-        visit '/stores/fandom'
+        visit '/s/fandom'
         expect(Sunspot.session).to be_a_search_for(Spree::Product)
         expect(Sunspot.session).to have_search_params(:with) {
           any_of do
@@ -79,9 +79,9 @@ feature 'Parent stores', story_319: true do
       end
     end
 
-    context 'visiting shop.test.com/stores/starkid' do
+    context 'visiting shop.test.com/s/starkid' do
       scenario 'I see products in starkid' do
-        visit '/stores/starkid'
+        visit '/s/starkid'
         expect(Sunspot.session).to be_a_search_for(Spree::Product)
         expect(Sunspot.session).to have_search_params(:with) {
           any_of do
@@ -145,9 +145,9 @@ feature 'Parent stores', story_319: true do
       end
     end
 
-    context 'visiting fan.test.com/stores/starkid' do
+    context 'visiting fan.test.com/s/starkid' do
       scenario 'I see products in starkid' do
-        visit '/stores/starkid'
+        visit '/s/starkid'
         expect(Sunspot.session).to be_a_search_for(Spree::Product)
         expect(Sunspot.session).to have_search_params(:with) {
           any_of do

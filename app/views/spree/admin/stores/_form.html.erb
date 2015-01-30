@@ -23,6 +23,14 @@
     <% end %>
   </div>
 
+  <div class="four columns">
+    <%= f.field_container :seo_title do %>
+      <%= f.label :seo_title %><br />
+      <%= f.text_field :seo_title, id: 'seo-title-field', :class => 'fullwidth' %>
+      <%= error_message_on :store, :seo_title %>
+    <% end %>
+  </div>
+
   <div class="two columns">
     <%= f.field_container :default do %>
       <%= f.label :default, Spree.t(:default) %>

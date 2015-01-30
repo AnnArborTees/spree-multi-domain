@@ -10,7 +10,7 @@ module Spree
     end
 
     def accurate_title
-      current_store.seo_title
+      current_store.title
     end
   end
 end
