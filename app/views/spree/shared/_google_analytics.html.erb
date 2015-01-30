@@ -98,31 +98,24 @@ $(function() {
 
   <% else %>
     <% # We assume any @products are worth an impression. %>
-    <% @products.try(:each) do |product| %>
 
-    $('#product_<%=product.id%>').find('a').click(function() {
+    $('li.product a').click(function() {
       if (!window.aatc_ga.loaded) return true;
 
-      var product = productObjects['<%=product.id%>'];
-      var finishedSends = 0;
-      var originalUrl = $(this).attr('href');
+      var productIndex = $(this).parents('li.product')[0].id.replace('product_', '');
+      var product      = productObjects[productIndex];
+      var targetUrl    = $(this).attr('href');
 
-      for (var i = 0; i < trackers.length; i++) {
-        var t = trackers[i];
+      eachTrackerIn(trackers, function(t) {
+        t.ga('ec:addProduct', product);
+        t.ga('ec:setAction', 'click', {list: '<%= ec_list %>'});
 
-        aatc_ga(t+'.ec:addProduct', product);
-        aatc_ga(t+'.ec:setAction', 'click', {list: '<%= ec_list %>'});
-        aatc_ga(t+'.send', 'event', 'UX', 'click', 'show', {
-          hitCallback: function() {
-            finishedSends += 1;
-            if (finishedSends >= trackers.length)
-              document.location = originalUrl;
-          }
+        t.sendClick('show', function() {
+          document.location = targetUrl;
         });
-      }
+      });
       return false;
     });
-    <% end %>
   <% end %>
 });
 
