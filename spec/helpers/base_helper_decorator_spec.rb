@@ -14,7 +14,7 @@ describe Spree::BaseHelper do
     before :each do
       allow(helper).to receive(:current_store).and_return current_store
       helper.instance_variable_set(:@product, product)
-      helper.instance_variable_set(:@order, order)
+      session[:order_id] = order.id
 
       order.line_items[0..2].each do |line_item|
         line_item.store = current_store

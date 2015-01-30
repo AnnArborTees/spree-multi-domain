@@ -42,7 +42,10 @@ module Spree
       @relevant_trackers ||= begin
         trackers = [Spree::Tracker.master].compact
         trackers += current_store.trackers
-        trackers += @order.trackers if @order
+
+        order = Spree::Order.find(session[:order_id]) if session[:order_id]
+        trackers += order.trackers if order
+
         trackers.uniq
       end
     end
