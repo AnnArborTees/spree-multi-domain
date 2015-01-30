@@ -1,4 +1,6 @@
 function eachTrackerIn(trackers, proc) {
+  var finishedSends = 0;
+
   for (var i = 0; i < trackers.length; i++) {
     proc({
       name: trackers[i],
@@ -12,8 +14,6 @@ function eachTrackerIn(trackers, proc) {
       <% # This will send a ux click event, and only perform the callback once %>
       <% # despite being within a loop. %>
       sendClick: function(label, callback) {
-        var finishedSends = 0;
-
         this.ga('send', 'event', 'UX', 'click', label, {
           hitCallback: function() {
             finishedSends += 1;

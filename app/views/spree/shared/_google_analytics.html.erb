@@ -48,24 +48,18 @@ $(function() {
     $('form[action="<%=populate_orders_path%>"][method="post"]').on('submit.analytics', function() {
       if (!window.aatc_ga.loaded) return true;
 
-      var finishedSends = 0;
       var form = $(this);
-
       productObject.quantity = 1;
 
-      for (var i = 0; i < trackers.length; i++) {
-        aatc_ga(t+'.ec:addProduct', productObject);
-        aatc_ga(t+'.ec:setAction', 'add');
-        aatc_ga(t+'.send', 'event', 'UX', 'click', 'add to cart', {
-          hitCallback: function() {
-            finishedSends += 1;
-            if (finishedSends >= trackers.length) {
-              form.off('submit.analytics');
-              form.submit();
-            }
-          }
+      eachTrackerIn(trackers, function(t) {
+        t.ga('ec:addProduct', productObject);
+        t.ga('ec:setAction', 'add');
+        t.sendClick('add to cart', function() {
+          form.off('submit.analytics');
+          form.submit();
         });
-      }
+      });
+
       return false;
     });
 
