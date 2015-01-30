@@ -55,25 +55,19 @@ module Spree
       if params[:controller] == 'spree/home'
         return 'Homepage'
       end
+      if params[:controller] == 'spree/stores'
+        return 'Store Page'
+      end
       if params[:controller] == 'spree/products' && params[:action] == 'index'
         return 'Search Results'
+      end
+      if params[:controller] == 'spree/order'
+        return 'Cart'
       end
       # 'Product View'
     end
 
     def ga_ec_product(product, position = 1, additional = {})
-      # %<
-      # {
-      #   'id': '#{product.id}',
-      #   'name': '#{product.name.gsub("'", "\\\\'")}',
-      #   'type': 'view',
-      #   'category': '#{product.try(:analytics_category) || 'null'}',
-      #   'brand': '#{product.try(:analytics_brand) || 'null'}',
-      #   'list': '#{ec_list}',
-      #   'position': #{position},
-      #   'price': '#{product.price}'
-      # }>.html_safe
-
       { id: product.id.to_s,
         name: product.name,
         category: product.try(:analytics_category),
@@ -87,7 +81,7 @@ module Spree
         .to_json
         .html_safe
     end
-    # Override this to add additional default fields
+    # Override this to add additional (or change) default fields
     def additional_ga_ec_product_fields(_product)
       {}
     end

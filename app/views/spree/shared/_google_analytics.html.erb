@@ -4,6 +4,8 @@
   window.ga_debug = {trace: true};
 <% end %>
 
+<%= render 'spree/shared/google_analytics_functions.js' %>
+
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -14,18 +16,17 @@ var trackerIds = [<%= relevant_trackers.map { |t| "'#{t.analytics_id}'" }.join('
 var productObjects = {};
 var productObject = undefined;
 
-for (var i = 0; i < trackers.length; i++) {
-  var t = trackers[i];
+eachTrackerIn(trackers, function(t, i) {
   var id = trackerIds[i];
 
-  aatc_ga('create', id, 'auto', { 'name': t });
-  aatc_ga(t+'.require', 'ec');
+  aatc_ga('create', id, 'auto', { 'name': t.name });
+  t.ga('require', 'ec');
 
   <% if params[:controller] == 'spree/products' && params[:action] == 'show' %>
       productObject = <%= ga_ec_product(@product) %>;
-      aatc_ga(t+'.ec:addImpression', productObject);
-      aatc_ga(t+'.ec:addProduct', productObject);
-      aatc_ga(t+'.ec:setAction', 'detail');
+      t.ga('ec:addImpression', productObject);
+      t.ga('ec:addProduct', productObject);
+      t.ga('ec:setAction', 'detail');
 
   <% else %>
 
@@ -33,17 +34,84 @@ for (var i = 0; i < trackers.length; i++) {
     <% @products.try(:each) do |product| %>
       <% count += 1 %>
       productObjects['<%= product.id %>'] = <%= ga_ec_product(product, count) %>;
-      aatc_ga(t+'.ec:addImpression', productObjects['<%= product.id %>']);
+      t.ga('ec:addImpression', productObjects['<%= product.id %>']);
     <% end %>
   <% end %>
 
-  aatc_ga(t+'.send', 'pageview');
-}
+  t.ga('send', 'pageview');
+});
 
 $(function() {
+
+  <% # Product show path has the 'add to cart' button that we must hook into. %>
   <% if params[:controller] == 'spree/products' && params[:action] == 'show' %>
-    // TODO add to cart listener!
+    $('form[action="<%=populate_orders_path%>"][method="post"]').on('submit.analytics', function() {
+      if (!window.aatc_ga.loaded) return true;
+
+      var finishedSends = 0;
+      var form = $(this);
+
+      productObject.quantity = 1;
+
+      for (var i = 0; i < trackers.length; i++) {
+        aatc_ga(t+'.ec:addProduct', productObject);
+        aatc_ga(t+'.ec:setAction', 'add');
+        aatc_ga(t+'.send', 'event', 'UX', 'click', 'add to cart', {
+          hitCallback: function() {
+            finishedSends += 1;
+            if (finishedSends >= trackers.length) {
+              form.off('submit.analytics');
+              form.submit();
+            }
+          }
+        });
+      }
+      return false;
+    });
+
+  <% # If there is an order, the user may be viewing their cart, and could potentially %>
+  <% # change the quantity of things or remove them. %>
+  <% elsif @order %>
+  <% # For now, we only care about removal; if the user adds quantity, it will be picked %>
+  <% # up after checkout. %>
+      $('#update-cart').on('submit.analytics', function() {
+        if (!window.aatc_ga.loaded) return true;
+
+        var finishedSends = 0;
+        var form = $(this);
+        var products = [];
+
+        <% @order.line_items.each.with_index do |line_item, index| %>
+        if ($('#order_line_items_attributes_<%=index%>_quantity').val() === '0')
+          products.push(<%= ga_ec_product(line_item.variant.product, index + 1) %>);
+        <% end %>
+
+        if (products.length === 0) return true;
+
+        for (var i = 0; i < trackers.length; i++) {
+          var t = trackers[i];
+
+          for (var j = 0; j < products.length; j++)
+            aatc_ga(t+'.ec:addProduct', products[j]);
+
+          aatc_ga(t+'.ec:setAction', 'remove');
+          aatc_ga(t+'.send', 'event', 'UX', 'click', 'remove from cart', {
+            hitCallback: function() {
+              finishedSends += 1;
+              if (finishedSends >= trackers.length) {
+                form.off('submit.analytics');
+                form.submit();
+              }
+            }
+          });
+        }
+
+        event.stopPropagation();
+        return false;
+      });
+
   <% else %>
+    <% # We assume any @products are worth an impression. %>
     <% @products.try(:each) do |product| %>
 
     $('#product_<%=product.id%>').find('a').click(function() {
@@ -58,7 +126,7 @@ $(function() {
 
         aatc_ga(t+'.ec:addProduct', product);
         aatc_ga(t+'.ec:setAction', 'click', {list: '<%= ec_list %>'});
-        aatc_ga(t+'.send', 'event', 'UX', 'click', 'Results', {
+        aatc_ga(t+'.send', 'event', 'UX', 'click', 'show', {
           hitCallback: function() {
             finishedSends += 1;
             if (finishedSends >= trackers.length)

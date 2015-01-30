@@ -1,0 +1,27 @@
+function eachTrackerIn(trackers, proc) {
+  for (var i = 0; i < trackers.length; i++) {
+    proc({
+      name: trackers[i],
+      <% # Shortcut so you don't have to say aatc_ga(t+'.send', blah, blah) etc. %>
+      <% # Instead: tracker.ga('send', bla, blah) %>
+      ga: function(method) {
+        arguments[0] = trackers[i]+'.'+method;
+        window.aatc_ga.apply(window, arguments);
+      },
+
+      <% # This will send a ux click event, and only perform the callback once %>
+      <% # despite being within a loop. %>
+      sendClick: function(label, callback) {
+        var finishedSends = 0;
+
+        this.ga('send', 'event', 'UX', 'click', label, {
+          hitCallback: function() {
+            finishedSends += 1;
+            if (finishedSends >= trackers.length)
+              callback();
+          }
+        });
+      }
+    }, i);
+  }
+}
