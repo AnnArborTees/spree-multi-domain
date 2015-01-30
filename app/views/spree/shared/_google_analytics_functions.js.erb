@@ -17,7 +17,9 @@ function createTrackers(forEachTracker) {
 
     aatc_ga('create', id, 'auto', { 'name': t.name });
     t.ga('require', 'ec');
+    <% if try(:current_currency) %>
     t.ga('set', '&cu', '<%= current_currency %>');
+    <% end %>
 
     forEachTracker(t, i);
   });
@@ -45,6 +47,12 @@ function eachTrackerIn(trackers, proc) {
             if (finishedSends >= trackers.length)
               callback();
           }
+        });
+      },
+
+      sendRefund: function() {
+        this.ga('send', 'event', 'Ecommerce', 'Refund', {
+          nonInteraction: 1,
         });
       }
     }, i);

@@ -22,10 +22,6 @@ createTrackers(function(t, i) {
     <% end %>
     t.ga('ec:setAction', 'purchase', <%= ga_ec_purchase(@order, current_store) %>);
 
-  <% elsif params[:controller] == 'spree/admin/orders' && params[:just_cancelled] %>
-
-    <% # TODO %>
-
   <% else %>
 
     <% @products.try(:each).try(:with_index, 1) do |product, index| %>
