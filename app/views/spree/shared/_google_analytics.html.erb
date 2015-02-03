@@ -1,39 +1,116 @@
-<% if tracker = current_tracker %>
+<script>
 
-  <%= javascript_tag do %>
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', '<%= tracker.analytics_id %>']);
-    _gaq.push(['_trackPageview']);
-
-    <% if flash[:commerce_tracking] && @order.present? %>
-      <%# more info: https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiEcommerce %>
-      _gaq.push(['_addTrans',
-        "<%= j @order.number %>",
-        "<%= tracker.store.name %>",
-        "<%= @order.total %>",
-        "<%= @order.adjustments.tax.sum(:amount) %>",
-        "<%= @order.adjustments.shipping.sum(:amount) %>",
-        "<%= j @order.bill_address.city %>",
-        "<%= j @order.bill_address.state_text %>",
-        "<%= j @order.bill_address.country.name %>"
-      ]);
-      <% @order.line_items.each do |line_item| %>
-        _gaq.push(['_addItem',
-          "<%= j @order.number %>",
-          "<%= j line_item.variant.sku %>",
-          "<%= j line_item.variant.product.name %>",
-          "",
-          "<%= line_item.price %>",
-          "<%= line_item.quantity %>"
-        ]);
-      <% end %>
-      _gaq.push(['_trackTrans']);
-    <% end %>
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  <% end %>
+<% unless Rails.env.production? %>
+  window.ga_debug = {trace: true};
 <% end %>
+
+<%= render 'spree/shared/google_analytics_functions.js' %>
+
+initializeAnalytics();
+
+createTrackers(function(t, i) {
+  <% if params[:controller] == 'spree/products' && params[:action] == 'show' %>
+    productObject = <%= ga_ec_product(@product) %>;
+    t.ga('ec:addImpression', productObject);
+    t.ga('ec:addProduct', productObject);
+    t.ga('ec:setAction', 'detail');
+
+  <% elsif order_just_completed? && params[:controller] == 'spree/orders' && params[:action] == 'show' %>
+
+    <% @order.line_items.each.with_index(1) do |line_item, index| %>
+      t.ga('ec:addProduct', <%= ga_ec_product(line_item.product, index, quantity: line_item.quantity) %>);
+    <% end %>
+    t.ga('ec:setAction', 'purchase', <%= ga_ec_purchase(@order, current_store) %>);
+
+  <% else %>
+
+    <% @products.try(:each).try(:with_index, 1) do |product, index| %>
+      productObjects['<%= product.id %>'] = <%= ga_ec_product(product, index) %>;
+      t.ga('ec:addImpression', productObjects['<%= product.id %>']);
+    <% end %>
+  <% end %>
+
+  t.ga('send', 'pageview');
+});
+
+$(function() {
+
+  <% # Product show path has the 'add to cart' button that we must hook into. %>
+  <% if params[:controller] == 'spree/products' && params[:action] == 'show' %>
+    $('form[action="<%=populate_orders_path%>"][method="post"]').on('submit.analytics', function() {
+      if (!window.aatc_ga.loaded) return true;
+
+      var form = $(this);
+      productObject.quantity = 1;
+
+      eachTrackerIn(trackers, function(t) {
+        t.ga('ec:addProduct', productObject);
+        t.ga('ec:setAction', 'add');
+        t.sendClick('add to cart', function() {
+          form.off('submit.analytics');
+          form.submit();
+        });
+      });
+
+      return false;
+    });
+
+  <% # If there is an order, the user may be viewing their cart, and could potentially %>
+  <% # change the quantity of things or remove them. %>
+  <% elsif @order %>
+  <% # For now, we only care about removal; if the user adds quantity, it will be picked %>
+  <% # up after checkout. %>
+      $('#update-cart').on('submit.analytics', function() {
+        if (!window.aatc_ga.loaded) return true;
+
+        var form = $(this);
+        var products = [];
+
+        <% @order.line_items.each.with_index do |line_item, index| %>
+        if ($('#order_line_items_attributes_<%=index%>_quantity').val() === '0')
+          products.push(<%= ga_ec_product(line_item.variant.product, index + 1) %>);
+        <% end %>
+
+        if (products.length === 0) return true;
+
+        eachTrackerIn(trackers, function(t) {
+          for (var j = 0; j < products.length; j++)
+            t.ga('ec:addProduct', products[j]);
+          t.ga('ec:setAction', 'remove');
+
+          t.sendClick('remove from cart', function() {
+            form.off('submit.analytics');
+            form.submit();
+          });
+        });
+
+        event.stopPropagation();
+        return false;
+      });
+
+  <% elsif order_just_completed? && params[:controller] == 'spree/orders' && params[:action] == 'show' %>
+
+  <% else %>
+    <% # Clicking a product should trigger an event. %>
+
+    $('li.product a').click(function() {
+      if (!window.aatc_ga.loaded) return true;
+
+      var productIndex = $(this).parents('li.product')[0].id.replace('product_', '');
+      var product      = productObjects[productIndex];
+      var targetUrl    = $(this).attr('href');
+
+      eachTrackerIn(trackers, function(t) {
+        t.ga('ec:addProduct', product);
+        t.ga('ec:setAction', 'click', {list: '<%= ec_list %>'});
+
+        t.sendClick('show', function() {
+          document.location = targetUrl;
+        });
+      });
+      return false;
+    });
+  <% end %>
+});
+
+</script>

@@ -37,5 +37,76 @@ module Spree
     def true_false_yes_no(bool)
       bool ? 'Yes'  : 'No'
     end
+
+    def relevant_trackers
+      @relevant_trackers ||= begin
+        trackers = [Spree::Tracker.master].compact
+        trackers += current_store.trackers
+
+        if session[:order_id]
+          order = Spree::Order.find(session[:order_id])
+        else
+          order = @order
+        end
+        trackers += order.trackers if order
+
+        trackers.uniq
+      end
+    end
+
+    def analytics_js
+      "//www.google-analytics.com/analytics#{'_debug' unless Rails.env.production?}.js"
+    end
+
+    def ec_list
+      if params[:controller] == 'spree/home'
+        return 'Homepage'
+      end
+      if params[:controller] == 'spree/stores'
+        return 'Store Page'
+      end
+      if params[:controller] == 'spree/products' && params[:action] == 'index'
+        return 'Search Results'
+      end
+      if params[:controller] == 'spree/order'
+        return 'Cart'
+      end
+      # 'Product View'
+    end
+
+    def ga_ec_product(product, position = 1, additional = {})
+      { id: product.id.to_s,
+        name: product.name,
+        category: product.try(:analytics_category),
+        brand: product.try(:analytics_brand),
+        list: ec_list,
+        position: position,
+        price: product.price.to_s
+      }
+        .merge(additional)
+        .merge(additional_ga_ec_product_fields(product))
+        .to_json
+        .html_safe
+    end
+    # Override this to add additional (or change) default fields
+    def additional_ga_ec_product_fields(_product)
+      {}
+    end
+
+    def ga_ec_purchase(order, store)
+      { id: order.number,
+        affiliation: store.name,
+        revenue: order.total,
+        tax: order.included_tax_total + order.additional_tax_total,
+        shipping: order.ship_total
+      }
+        .to_json
+        .html_safe
+    end
+
+    def order_just_completed?
+      params[:checkout_complete]
+    end
+
   end
 end

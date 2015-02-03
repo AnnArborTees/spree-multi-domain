@@ -1,0 +1,21 @@
+<% if params[:just_cancelled_order] %>
+
+  <!-- GOOGLE ANALYTICS ORDER REFUND -->
+  <script>
+  <% unless Rails.env.production? %>
+    window.ga_debug = {trace: true};
+  <% end %>
+
+  <%= render 'spree/shared/google_analytics_functions.js' %>
+
+  initializeAnalytics();
+
+  createTrackers(function(t) {
+    t.ga('ec:setAction', 'refund', {
+      id: '<%= @order.number %>'
+    });
+    t.sendRefund();
+  });
+  </script>
+
+<% end %>
