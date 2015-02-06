@@ -23,7 +23,8 @@ Spree::ProductsController.class_eval do
     raise ActiveRecord::RecordNotFound if @product.stores.empty?
 
     unless @product.stores.include?(current_store) ||
-           @product.stores.include?(domain_store)
+           @product.stores.include?(domain_store) ||
+           (@product.stores - domain_store.all_children).length < @product.stores.length
 
       # If we do a broad search, and click on a product that belongs
       # to the current store's children but NOT the current store,
