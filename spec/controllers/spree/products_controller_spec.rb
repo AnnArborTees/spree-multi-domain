@@ -47,4 +47,17 @@ describe Spree::ProductsController do
     end
   end
 
+  describe 'on :show with a store_id param', story_436: true do
+    let!(:store) { FactoryGirl.create :store }
+
+    before(:each) do
+      product.stores << store
+    end
+
+    it 'assigns @current_store to the store of the given id' do
+      spree_get :show, id: product.to_param, store_id: store.id
+      expect(assigns(:current_store)).to eq store
+    end
+  end
+
 end
