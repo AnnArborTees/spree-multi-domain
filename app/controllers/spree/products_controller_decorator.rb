@@ -1,4 +1,5 @@
 Spree::ProductsController.class_eval do
+  before_filter :assign_current_store_from_url, only: :show
   before_filter :can_show_product, only: [:show, :analytics_click]
   before_filter :assign_current_store_from_search, only: :index
 
@@ -42,6 +43,11 @@ Spree::ProductsController.class_eval do
 
       raise ActiveRecord::RecordNotFound unless store_is_in_hirearchy
     end
+  end
+
+  def assign_current_store_from_url
+    return unless params[:store_id]
+    @current_store = Spree::Store.find(params[:store_id])
   end
 
   def assign_current_store_from_search
