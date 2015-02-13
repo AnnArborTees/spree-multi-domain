@@ -108,5 +108,27 @@ module Spree
       params[:checkout_complete]
     end
 
+    def store_select_filter
+      all_taxonomies = {
+        id: -1, all: true, name: 'All',
+        taxonomy_ids: Taxonomy.pluck(:id)
+      }
+      no_store = {
+        id: -1, no_store: true, name: 'No Store',
+        taxonomy_ids: Taxonomy.without_stores.pluck(:id)
+      }
+      stores = Store.all
+      option = lambda do |hash|
+        "<option value='#{hash[:id]}' data-taxonomies='#{j (hash[:taxonomy_ids] || hash.taxonomy_ids).to_json}'>"\
+        "#{hash[:name]}"\
+        "</option>"
+      end
+
+      select_tag(
+        'store_select',
+        ([all_taxonomies] + stores + [no_store]).map(&option).join.html_safe,
+      )
+    end
+
   end
 end
