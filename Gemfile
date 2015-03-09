@@ -13,6 +13,7 @@ gem 'sunspot_solr'
 gem 'spree_solr', github: 'annarbortees/spree_solr', branch: branch
 
 gem 'database_cleaner'
+gem 'acts_as_list'
 
 gem 'byebug'
 

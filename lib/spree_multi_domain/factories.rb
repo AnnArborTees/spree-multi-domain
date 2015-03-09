@@ -8,6 +8,17 @@ FactoryGirl.define do
   end
 end
 
+FactoryGirl.define do
+  factory :homepage, class: Spree::Homepage do
+    name 'whatever'
+  end
+end
+
+FactoryGirl.define do
+  factory :homepage_product, class: Spree::HomepageProduct do
+  end
+end
+
 # Begin added stuff
 # TODO clean this uppppp
 FactoryGirl.define do
