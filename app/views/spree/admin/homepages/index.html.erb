@@ -1,42 +1,15 @@
-<%= render :partial => 'spree/admin/shared/configuration_menu' %>
-
-<% content_for :page_title do %>
-    <%= Spree.t(:homepages) %>
+<% content_for :table_filter_title do %>
+  Choose a homepage
 <% end %>
 
-<%= render :partial => 'spree/admin/shared/store_sub_menu' %>
-
-<% content_for :page_actions do %>
-    <li>
-      <%= button_link_to Spree.t(:new_homepage), new_object_url,  :icon => 'icon-plus', :id => 'admin_new_homepage_link' %>
-    </li>
+<% content_for :table_filter do %>
+  <div data-hook="admin_orders_index_search" class="columns six">
+    <input type='text' id='homepage_id' />
+  </div>
 <% end %>
 
-<table class="index" id='listing_homepages'>
-  <colgroup>
-    <col style="width: 80px">
-    <col style="width: 80px">
-    <col style="width: 220px">
-    <col style="width: 15%">
-  </colgroup>
-  <thead>
-  <th><%= Spree.t(:homepage_name) %></th>
-  <th><%= Spree.t(:store) %></th>
-  <th><%= Spree.t(:homepage_products) %></th>
-  <th data-hook="admin_homepages_index_header_actions" class="actions"></th>
-  </thead>
-  <tbody>
-  <% @homepages.each do |homepage|%>
-      <tr id="<%= spree_dom_id homepage %>"
-          data-hook="admin_homepages_index_rows" class="<%= cycle('odd', 'even') %>">
-        <td><%= homepage.name %></td>
-        <td><%= homepage.store.name %></td>
-        <td><%= homepage.products.map(&:name).join(", ") unless homepage.products.empty? %></td>
-        <td data-hook="admin_homepages_index_row_actions" class="actions">
-          <%= link_to_edit homepage, :no_text => true %> &nbsp;
-          <%= link_to_delete homepage, :no_text => true %>
-        </td>
-      </tr>
-  <% end %>
-  </tbody>
-</table>
+<%= render partial: 'spree/admin/shared/product_sub_menu' %>
+<span id='sorting_explanation' style='display:none'><%= Spree.t(:click_and_drag_on_the_products_to_sort_them) %></span>
+<ul id='homepage_products'></ul>
+
+<%= render partial: 'spree/admin/products/autocomplete', formats: :js %>
