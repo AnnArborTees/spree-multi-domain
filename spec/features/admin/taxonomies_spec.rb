@@ -10,7 +10,7 @@ feature 'editing taxonomies', story_435: true do
   let!(:taxonomy2) { create :taxonomy, name: 'Second One', stores: [store2, store1] }
 
   scenario 'the list of taxonomies to edit is scoped by store', js: true do
-    pending: "The dummy app's html is completely messed up and I cannot test these js things with it."
+    pending "The dummy app's html is completely messed up and I cannot test these js things with it."
     visit spree.admin_taxonomies_path
 
     sleep 0.5
