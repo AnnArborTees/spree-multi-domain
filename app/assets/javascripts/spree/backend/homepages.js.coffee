@@ -28,13 +28,14 @@ $(document).ready ->
           q:
             name_cont: term
         results: (data, page) ->
-          # more = page < data.pages
           results: data.map (r) ->
             id: r.id,
             text: r.name
-          # more: more
 
   $('#homepage_id').on "change", (e) ->
+    $('#edit_homepage_link').prop('href', "/admin/homepages/#{e.val}/edit")
+    $('#edit_homepage_link').show()
+
     el = $('#homepage_products')
     $.ajax
       url: "/admin/homepages/#{e.val}/products"
@@ -43,7 +44,9 @@ $(document).ready ->
         el.empty()
         if data.length == 0
           $('#sorting_explanation').hide()
-          $('#homepage_products').html("<h4>" + Spree.translations.no_results + "</h4>")
+          $('#homepage_products').html(
+            "<h4>" + Spree.translations.no_results + "</h4>"
+          )
         else
           for product in data
             thumbnail = window.thumbnail_for(product)

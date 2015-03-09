@@ -1,7 +1,9 @@
 module Spree
   module Api
     module ApiHelpers
-      @@image_attributes << :thumbnail
+      if defined? @@image_attributes
+        @@image_attributes << :thumbnail
+      end
     end
   end
 end

@@ -1,4 +1,5 @@
-$('#taxon_id').off 'change'
+$(document).ready ->
+  $('#taxon_id').off 'change'
   $('#taxon_id').on 'change', (e) ->
     el = $('#taxon_products')
     $.ajax

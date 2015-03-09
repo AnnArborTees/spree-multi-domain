@@ -3,7 +3,7 @@ module Spree
     class HomepageProductsController < Spree::Api::BaseController
       def update
         authorize! :update, Product
-        authorize! :update, Taxon
+        authorize! :update, Homepage
         homepage_product = Spree::HomepageProduct.find_by(
           product_id: params[:product_id],
           homepage_id: params[:homepage_id]
