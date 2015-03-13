@@ -68,6 +68,10 @@ module Spree
       name
     end
 
+    def create_your_own_link
+      super || ''
+    end
+
     def all_children
       all = []
       children = self.children.to_a
