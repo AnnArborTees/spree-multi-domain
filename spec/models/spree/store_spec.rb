@@ -75,4 +75,13 @@ describe Spree::Store do
       end
     end
   end
+
+  describe '#create_your_own_link', story_338: true do
+    context 'when the field is nil' do
+      it 'returns ""' do
+        store = create :store, create_your_own_link: nil
+        expect(store.create_your_own_link).to be_empty
+      end
+    end
+  end
 end
