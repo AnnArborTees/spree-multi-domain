@@ -15,7 +15,7 @@ createTrackers(function(t, i) {
     t.ga('ec:addProduct', productObject);
     t.ga('ec:setAction', 'detail');
 
-  <% elsif order_just_completed? && params[:controller] == 'spree/orders' && @order.try(:completed?) %>
+  <% elsif order_just_completed? && @order.try(:completed?) %>
 
     <% @order.line_items.each.with_index(1) do |line_item, index| %>
       t.ga('ec:addProduct', <%= ga_ec_product(line_item.product, index, quantity: line_item.quantity) %>);
