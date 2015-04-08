@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'byebug'
 
 feature 'Page titles', story_336: true do
   let(:taxon) { create :taxon, name: 'The Taxon' }

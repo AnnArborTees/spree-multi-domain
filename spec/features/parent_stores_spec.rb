@@ -1,5 +1,4 @@
 require 'spec_helper'
-        require 'byebug'
 
 feature 'Parent stores', story_319: true do
   let!(:shop) { create :store, default: true, slug: 'shop', domains: 'shop.test.com' }
