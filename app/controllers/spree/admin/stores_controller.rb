@@ -14,11 +14,12 @@ class Spree::Admin::StoresController < Spree::Admin::ResourceController
   end
 
   private
-    def load_payment_methods
-      @payment_methods = Spree::PaymentMethod.all
-    end
 
-    def load_shipping_methods
-      @shipping_methods = Spree::ShippingMethod.all
-    end
+  def load_payment_methods
+    @payment_methods = Spree::PaymentMethod.all
+  end
+
+  def load_shipping_methods
+    @shipping_methods = Spree::ShippingMethod.all
+  end
 end
