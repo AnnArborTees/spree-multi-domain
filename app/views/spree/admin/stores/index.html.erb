@@ -13,28 +13,21 @@
 <% end %>
 
 <table class="index" id='listing_stores'>
-  <colgroup>
-    <col style="width: 120px">
-    <col style="width: 80px">
-    <col style="width: 80px">
-    <col style="width: 220px">
-    <col style="width: 15%">
-  </colgroup>
   <thead>
     <th><%= Spree.t(:store_name) %></th>
-    <th><%= Spree.t(:store_code) %></th>
-    <th><%= Spree.t(:send_mails_as) %></th>
     <th><%= Spree.t(:domains) %></th>
-    <th data-hook="admin_stores_index_header_actions" class="actions"></th>
+    <th><%= Spree.t(:homepage) %></th>
+    <th data-hook="admin_stores_index_header_actions" class="actions" style="width: 80px"></th>
   </thead>
   <tbody>
     <% @stores.each do |store|%>
       <tr id="<%= spree_dom_id store %>"
           data-hook="admin_stores_index_rows" class="<%= cycle('odd', 'even') %>">
-        <td><%= store.name %></td>
-        <td><%= store.code %></td>
-        <td><%= store.email %></td>
+        <td><%= store.name %>  <br />
+            <b>Code:</b> <%= store.code %>
+        </td>
         <td><%= store.domains.split(" ").map{|x| truncate(x, length: 30, omission: '...')}.join(', ') %></td>
+        <td><%= link_to(store.page.title, store.page.link, target: '_blank') rescue 'unassigned' %></td>
         <td data-hook="admin_stores_index_row_actions" class="actions">
           <%= link_to_edit store, :no_text => true %> &nbsp;
           <%= link_to_delete store, :no_text => true %>

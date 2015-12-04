@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'sunspot_rails'
   s.add_dependency 'sunspot_solr'
   s.add_dependency 'acts_as_list'
+  s.add_dependency 'spree_static_content', version
 
   s.add_development_dependency 'capybara', '~> 2.1.0'
   s.add_development_dependency 'coffee-rails'
