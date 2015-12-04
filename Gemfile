@@ -7,6 +7,7 @@ gem 'spree_backend', github: 'spree/spree', branch: branch
 gem 'spree_core', github: 'spree/spree', branch: branch
 gem 'spree_frontend', github: 'spree/spree', branch: branch
 gem 'spree_multi_currency', github: 'spree/spree_multi_currency', branch: branch
+gem 'spree_static_content', github: 'annarbortees/spree_static_content', branch: branch
 
 gem 'sunspot_rails'
 gem 'sunspot_solr'

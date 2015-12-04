@@ -57,17 +57,10 @@
     <% end %>
   </div>
 
-  <div class="four columns">
+  <div class="four columns omega">
     <%= f.field_container :default_currency do %>
       <%= f.label :default_currency, Spree.t(:default_currency) %>
       <%= f.text_field :default_currency %>
-    <% end %>
-  </div>
-
-  <div class="two columns">
-    <%= f.field_container :homepage_layout do %>
-        <%= f.label :homepage_layout, Spree.t(:homepage_layout) %>
-        <%= f.select :homepage_layout, Spree::Store.homepage_layouts %>
     <% end %>
   </div>
 
@@ -86,6 +79,26 @@
         <%= error_message_on :store, :taxonomies %>
     <% end %>
   </div>
+
+  <div class="alpha eight columns omega">
+    <h3>Homepage Configuration</h3>
+
+    <p>Select a page to replace the homepage. Leaving blank will default to the normal product page</p>
+
+    <%= f.field_container :page_id do %>
+        <%= f.label :page_id, Spree.t(:page) %><br />
+        <%= f.collection_select :page_id, Spree::Page.all, :id, :title, {prompt: "Please Select (Optional)"}, {class: 'select2 fullwidth'} %>
+        <%= error_message_on :store, :page_id %>
+    <% end %>
+
+    <p>If a page is selected above, this is irrelevant</p>
+
+    <%= f.field_container :homepage_layout do %>
+        <%= f.label :homepage_layout, Spree.t(:homepage_layout) %>
+        <%= f.select :homepage_layout, Spree::Store.homepage_layouts %>
+    <% end %>
+  </div>
+
 
 
   <div class="eight columns">

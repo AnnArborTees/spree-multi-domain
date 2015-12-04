@@ -20,6 +20,7 @@ module Spree
     has_many :children, class_name: 'Spree::Store', inverse_of: :parent, foreign_key: 'parent_id'
 
     has_many :trackers, class_name: 'Spree::Tracker', inverse_of: :store
+    belongs_to :page
 
     validates :name, :code, :slug, :domains, :email, presence: true
     validates :slug, uniqueness: true, unless: proc { slug.nil? || slug.empty? }
@@ -28,6 +29,7 @@ module Spree
     before_validation proc { self.slug = code if slug.nil? }
     before_validation proc { self.parent_id = nil if parent_id == id }
 
+    default_scope -> { order(name: :asc) }
     scope :default, lambda { where(:default => true) }
     scope :by_domain, lambda { |domain| where("domains like ?", "%#{domain}%") }
 
@@ -81,7 +83,7 @@ module Spree
     def up_to_top
       parents = [self, parent]
       until parents.last.nil?
-        parents << parents.last.parent 
+        parents << parents.last.parent
       end
       parents[0...-1]
     end
