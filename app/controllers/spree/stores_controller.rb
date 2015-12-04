@@ -2,7 +2,7 @@ class Spree::StoresController < Spree::StoreController
   helper 'spree/products'
 
   def index
-    @stores = Spree::Store.all
+    @stores = Spree::Store.all.order(:name)
   end
 
   def show

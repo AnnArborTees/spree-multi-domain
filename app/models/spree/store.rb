@@ -29,7 +29,6 @@ module Spree
     before_validation proc { self.slug = code if slug.nil? }
     before_validation proc { self.parent_id = nil if parent_id == id }
 
-    default_scope -> { order(name: :asc) }
     scope :default, lambda { where(:default => true) }
     scope :by_domain, lambda { |domain| where("domains like ?", "%#{domain}%") }
 

@@ -3,12 +3,12 @@ module Spree
     class StoresController < Spree::Api::BaseController
 
       def index
-        @stores = Spree::Store.all
+        @stores = Spree::Store.all.order(:name)
         respond_with @stores
       end
 
       def show
-        @store = Spree::Store.find(params[:id])
+        @store = Spree::Store.find(params[:id]).order(:name)
         respond_with(@store)
       end
 
