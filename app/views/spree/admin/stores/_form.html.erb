@@ -95,7 +95,7 @@
 
     <%= f.field_container :page_id do %>
         <%= f.label :page_id, Spree.t(:page) %><br />
-        <%= f.collection_select :page_id, Spree::Page.all, :id, :title, {prompt: "Please Select (Optional)"}, {class: 'select2 fullwidth'} %>
+        <%= f.collection_select :page_id, Spree::Page.all, :id, :title, { prompt: "Please Select (Optional)" }, {include_blank: true, class: 'select2 fullwidth'} %>
         <%= error_message_on :store, :page_id %>
     <% end %>
 
