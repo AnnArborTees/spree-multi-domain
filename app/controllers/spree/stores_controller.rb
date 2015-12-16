@@ -13,17 +13,21 @@ class Spree::StoresController < Spree::StoreController
     end
 
     @store = @current_store = Spree::Store.find_by(slug: params[:id])
-
     return render_404 if @store.nil?
     return redirect_to spree.root_path if @store == domain_store
 
     add_current_store_id_to_params
 
-    @searcher = build_searcher(params)
-    @products = @searcher.retrieve_products
-    @taxonomies = @store.taxonomies.includes(root: :children)
+    @page = @current_store.try(:page)
+    if @page
+      render 'spree/static_content/show'
+    else
+      @searcher = build_searcher(params)
+      @products = @searcher.retrieve_products
+      @taxonomies = @store.taxonomies.includes(root: :children)
 
-    render 'spree/home/index'
+      render 'spree/home/index'
+    end
   end
 
   def accurate_title
