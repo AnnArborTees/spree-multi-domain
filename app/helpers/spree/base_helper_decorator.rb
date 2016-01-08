@@ -44,7 +44,7 @@ module Spree
         trackers += current_store.trackers
 
         if session[:order_id]
-          order = Spree::Order.find(session[:order_id])
+          order = Spree::Order.where(id: session[:order_id]).first || @order
         else
           order = @order
         end
