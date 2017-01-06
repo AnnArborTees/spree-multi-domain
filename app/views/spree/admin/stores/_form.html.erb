@@ -72,6 +72,16 @@
     <% end %>
   </div>
 
+  <div class="four columns omega">
+    <%= f.field_container :index_on_www do %>
+      <%= f.label :index_on_www, "Index on WWW" %>
+      <ul>
+        <li><%= f.radio_button :index_on_www, '1', checked: f.object.index_on_www? %> <%= Spree.t(:yes) %></li>
+        <li><%= f.radio_button :index_on_www, '0', checked: !f.object.index_on_www?  %> <%= Spree.t(:no) %></li>
+      </ul>
+    <% end %>
+  </div>
+
   <div class="six columns">
     <%= f.field_container :domains do %>
       <%= f.label :domains, Spree.t(:domains) %><br />
